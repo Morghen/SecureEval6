@@ -22,3 +22,5 @@
 hs_err_pid*
 /ServerBillet/build/
 /ServerBillet/dist/
+/ApplicationBillet/dist/
+/ApplicationBillet/build/

@@ -6,7 +6,9 @@
 
 package serverbillet;
 
+import java.io.PrintStream;
 import java.util.Date;
+import libs.redirectMsg;
 
 /**
  *
@@ -15,9 +17,14 @@ import java.util.Date;
 public class ServerBilletGUI extends javax.swing.JFrame {
 
     private ServerThread thServ = null;
+    PrintStream standardOut;
     
     public ServerBilletGUI() {
         initComponents();
+        PrintStream PStream = new PrintStream(new redirectMsg(TraceTextArea));
+        standardOut = System.out;
+        System.setOut(PStream);
+        System.setErr(PStream);
         setLocationRelativeTo(null);
     }
 
@@ -94,12 +101,11 @@ public class ServerBilletGUI extends javax.swing.JFrame {
 
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
         Trace("Arret serveur");
-        
     }//GEN-LAST:event_stopButtonActionPerformed
     
     public void Trace(String txt) {
         Date now = new Date();
-        TraceTextArea.append(now.toString()+" SERVEUR: "+txt+"\n");
+        System.out.println(now.toString()+" : "+txt);
     }
     /**
      * @param args the command line arguments
