@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -24,10 +25,10 @@ public class ServerThread implements Runnable {
     private Socket CSocket;
     private ServerBilletGUI pere = null;
     
-    public ServerThread(ServerBilletGUI Pere) {
+    public ServerThread(ServerBilletGUI zonetxt) {
         SSocket = null;
         CSocket = null;
-        pere = Pere;
+        pere = zonetxt;
     }
                
     @Override
@@ -41,7 +42,7 @@ public class ServerThread implements Runnable {
             pere.Trace("Erreur port d'ecoute : "+e);
             System.exit(-1);
         }
-        System.out.println("Serveur en attente");
+        pere.Trace("Serveur en attente");
         
         try
         {
@@ -49,28 +50,28 @@ public class ServerThread implements Runnable {
         }
         catch(SocketException e)
         {
-            System.out.println("Accept interrompu : "+e);
+            pere.Trace("Accept interrompu : "+e);
         }
         catch(IOException e)
         {
-            System.err.println("Erreur accept : "+e);
+            pere.Trace("Erreur accept : "+e);
             System.exit(-1);
         }
         
         try
         {
-            System.out.println("Serveur a recu la connexion");
+            pere.Trace("Serveur a recu la connexion");
             DataInputStream dis = new DataInputStream(CSocket.getInputStream());
             DataOutputStream dos = new DataOutputStream(CSocket.getOutputStream());
                       
         }
         catch(EOFException e)
         {
-            System.err.println("Le client a termine la connection");
+            pere.Trace("Le client a termine la connection");
         }
         catch(IOException e)
         {
-            System.err.println("Erreur : "+e);
+            pere.Trace("Erreur : "+e);
         }
     }
 
