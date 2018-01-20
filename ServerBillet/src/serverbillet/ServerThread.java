@@ -36,7 +36,6 @@ public class ServerThread extends Thread {
     private final int NbrCliTh = 3;
     private boolean Running = false;
     private ServerSocket SSocket;
-    private Socket CSocket;
     private Tracable pere = null;
     
     private TickmapList tickmapList = null;
@@ -44,7 +43,6 @@ public class ServerThread extends Thread {
     
     public ServerThread(Tracable zonetxt) {
         SSocket = null;
-        CSocket = null;
         pere = zonetxt;
         
         listCli = new LinkedList<>();
@@ -56,6 +54,10 @@ public class ServerThread extends Thread {
         catch(IOException e)
         {
             pere.Trace("Erreur port d'ecoute : "+e);
+        }
+        listCli = new LinkedList<>();
+        for(int i=0; i<NbrCliTh; i++){
+            listCli.add(new ClientThread(tickmapList, pere));
         }
     }
                

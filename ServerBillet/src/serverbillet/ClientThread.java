@@ -8,6 +8,7 @@ package serverbillet;
 import java.net.Socket;
 import libs.TickmapClient;
 import libs.TickmapList;
+import libs.Tracable;
 
 /**
  *
@@ -18,9 +19,11 @@ public class ClientThread extends Thread{
     private TickmapList tl = null;
     private TickmapClient tc = null;
     private boolean running = false;
+    private Tracable pere = null;
 
-    public ClientThread(TickmapList ptc) {
+    public ClientThread(TickmapList ptc, Tracable t) {
         tl = ptc;
+        pere = t;
     }
     
     
