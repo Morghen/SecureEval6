@@ -94,13 +94,20 @@ public class ServerBilletGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-        Trace("Demarrage serveur");
-        thServ = new ServerThread(this);
-        thServ.run();
+        if(thServ == null)
+        {
+            Trace("Demarrage serveur");
+            thServ = new ServerThread(this);
+            thServ.start();
+        }       
     }//GEN-LAST:event_startButtonActionPerformed
 
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
-        Trace("Arret serveur");
+        if(thServ != null)
+        {
+            Trace("Arret serveur");
+            thServ.doStop();
+        }            
     }//GEN-LAST:event_stopButtonActionPerformed
     
     public void Trace(String txt) {

@@ -12,13 +12,15 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTextArea;
 
 /**
  *
  * @author Morghen
  */
-public class ServerThread implements Runnable {  
+public class ServerThread extends Thread {  
     
     private final int Port = 9025;
     private ServerSocket SSocket;
@@ -72,6 +74,14 @@ public class ServerThread implements Runnable {
         catch(IOException e)
         {
             pere.Trace("Erreur : "+e);
+        }
+    }
+    
+    public void doStop() {
+        try {
+            SSocket.close();
+        } catch (IOException ex) {
+            pere.Trace("Erreur fermeture de connection : "+ex);
         }
     }
 
