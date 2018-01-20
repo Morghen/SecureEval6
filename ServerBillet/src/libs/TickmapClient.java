@@ -15,6 +15,10 @@ public class TickmapClient {
     
     private Socket clientSoc;
 
+    public TickmapClient(Socket clientSoc) {
+        this.clientSoc = clientSoc;
+    }
+
     /**
      * Get the value of clientSoc
      *

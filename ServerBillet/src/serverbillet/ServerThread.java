@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextArea;
+import libs.TickmapClient;
+import libs.TickmapList;
 import libs.Tracable;
 import protocole.tickmap;
 
@@ -37,14 +39,14 @@ public class ServerThread extends Thread {
     private Socket CSocket;
     private Tracable pere = null;
     
-    private List<tickmap> listtickmap = null;
+    private TickmapList tickmapList = null;
     private List<ClientThread> listCli = null;
     
     public ServerThread(Tracable zonetxt) {
         SSocket = null;
         CSocket = null;
         pere = zonetxt;
-        listtickmap = new LinkedList<>();
+        
         listCli = new LinkedList<>();
         
         try
@@ -64,7 +66,8 @@ public class ServerThread extends Thread {
             pere.Trace("Serveur en attente");
             try
             {
-                CSocket = SSocket.accept();
+                TickmapClient tc = new TickmapClient(SSocket.accept());
+                tickmapList.addTMClient(tc);
                 pere.Trace("Serveur a recu la connexion");
             }
             catch(SocketException e)
