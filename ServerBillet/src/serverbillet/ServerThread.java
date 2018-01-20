@@ -80,6 +80,7 @@ public class ServerThread extends Thread {
     
     public void doStop() {
         try {
+            Running = false;
             SSocket.close();
         } catch (IOException ex) {
             pere.Trace("Erreur fermeture de connection : "+ex);
