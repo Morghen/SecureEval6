@@ -17,6 +17,10 @@ public class tickmap {
     
     private String message;
 
+    public tickmap(TICKMAPTYPE type) {
+        this.type = type;
+    }
+
     public tickmap(TICKMAPTYPE type, String message) {
         this.type = type;
         this.message = message;

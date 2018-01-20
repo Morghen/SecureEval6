@@ -16,6 +16,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import protocole.TICKMAPTYPE;
+import protocole.tickmap;
 
 /**
  *
@@ -24,8 +26,8 @@ import java.util.logging.Logger;
 public class ApplicationBilletLogin extends javax.swing.JFrame {
 
     Socket CSocket = null;
-    BufferedReader dis = null;
-    BufferedWriter dos = null;
+    DataInputStream dis = null;
+    DataOutputStream dos = null;
     
     public boolean connected = false;
     
@@ -113,6 +115,24 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
 
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
         System.out.println("Tentative de login");
+        tickmap msgtickmap = new tickmap(TICKMAPTYPE.CONNECT);
+        
+        
+        //on prends le login et password pour faire le msg
+        String login = LoginField.getText();
+        String mdp = PasswdField.getText();
+        String msg = "";
+        
+        //on fait le truc crypto ici
+        
+        //envois du msg
+        msgtickmap.setMessage(msg);
+        try {
+            dos.writeInt(msgtickmap.getSize());
+            dos.write(msgtickmap.toString().getBytes());
+        } catch (IOException ex) {
+            Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_OKButtonActionPerformed
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
@@ -170,8 +190,8 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         {
             CSocket = new Socket("127.0.0.1",9025);
             System.out.println("Client connecte : "+CSocket.getInetAddress().toString());
-            dis = new BufferedReader(new InputStreamReader(CSocket.getInputStream()));
-            dos = new BufferedWriter(new OutputStreamWriter(CSocket.getOutputStream()));
+            dis = new DataInputStream(CSocket.getInputStream());
+            dos = new DataOutputStream(CSocket.getOutputStream());
             System.out.println("DIS & DOS acquis");
         }
         catch (IOException ex)
