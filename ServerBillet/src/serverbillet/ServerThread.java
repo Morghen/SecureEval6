@@ -16,10 +16,13 @@ import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextArea;
 import libs.Tracable;
+import protocole.tickmap;
 
 /**
  *
@@ -28,20 +31,22 @@ import libs.Tracable;
 public class ServerThread extends Thread {  
     
     private final int Port = 9025;
+    private final int NbrCliTh = 3;
+    private boolean Running = false;
     private ServerSocket SSocket;
     private Socket CSocket;
     private Tracable pere = null;
-    private BufferedReader dis = null;
-    private BufferedWriter dos = null;
+    
+    private List<tickmap> listtickmap = null;
+    private List<ClientThread> listCli = null;
     
     public ServerThread(Tracable zonetxt) {
         SSocket = null;
         CSocket = null;
         pere = zonetxt;
-    }
-               
-    @Override
-    public void run() {
+        listtickmap = new LinkedList<>();
+        listCli = new LinkedList<>();
+        
         try
         {
             SSocket = new ServerSocket(Port);
@@ -49,37 +54,27 @@ public class ServerThread extends Thread {
         catch(IOException e)
         {
             pere.Trace("Erreur port d'ecoute : "+e);
-            System.exit(-1);
         }
-        pere.Trace("Serveur en attente");
-        
-        try
-        {
-            CSocket = SSocket.accept();
-        }
-        catch(SocketException e)
-        {
-            pere.Trace("Accept interrompu : "+e);
-        }
-        catch(IOException e)
-        {
-            pere.Trace("Erreur accept : "+e);
-            System.exit(-1);
-        }
-        
-        try
-        {
-            pere.Trace("Serveur a recu la connexion");
-            dis = new BufferedReader(new InputStreamReader(CSocket.getInputStream()));
-            dos = new BufferedWriter(new OutputStreamWriter(CSocket.getOutputStream()));                    
-        }
-        catch(EOFException e)
-        {
-            pere.Trace("Le client a termine la connection");
-        }
-        catch(IOException e)
-        {
-            pere.Trace("Erreur : "+e);
+    }
+               
+    @Override
+    public void run() {
+        Running = true;
+        while(Running ){
+            pere.Trace("Serveur en attente");
+            try
+            {
+                CSocket = SSocket.accept();
+                pere.Trace("Serveur a recu la connexion");
+            }
+            catch(SocketException e)
+            {
+                pere.Trace("Accept interrompu : "+e);
+            }
+            catch(IOException e)
+            {
+                pere.Trace("Erreur accept : "+e);
+            }
         }
     }
     

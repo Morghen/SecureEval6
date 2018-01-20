@@ -9,6 +9,9 @@ package serverbillet;
  *
  * @author Morghen
  */
-public class ClientThread {
-    
+public class ClientThread extends Thread{
+    @Override
+    public void run() {
+        
+    }
 }

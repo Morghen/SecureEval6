@@ -27,6 +27,8 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
     BufferedReader dis = null;
     BufferedWriter dos = null;
     
+    public boolean connected = false;
+    
     public ApplicationBilletLogin() {
         initComponents();
         setLocationRelativeTo(null);    
