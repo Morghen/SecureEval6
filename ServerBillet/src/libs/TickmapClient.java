@@ -5,6 +5,8 @@
  */
 package libs;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -19,15 +21,15 @@ import java.util.logging.Logger;
 public class TickmapClient {
     
     private Socket clientSoc;
-    public InputStream in;
-    public OutputStream out;
+    public DataInputStream in;
+    public DataOutputStream out;
     
 
     public TickmapClient(Socket pclientSoc) {
         this.clientSoc = pclientSoc;
         try {
-            in = clientSoc.getInputStream();
-            out = clientSoc.getOutputStream();
+            in = new DataInputStream(clientSoc.getInputStream());
+            out = new DataOutputStream(clientSoc.getOutputStream());
         } catch (IOException ex) {
             Logger.getLogger(TickmapClient.class.getName()).log(Level.SEVERE, null, ex);
         }
