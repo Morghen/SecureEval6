@@ -18,7 +18,7 @@ import libs.redirectMsg;
 public class ServerBilletGUI extends javax.swing.JFrame implements Tracable{
 
     private ServerThread thServ = null;
-    PrintStream standardOut;
+    //PrintStream standardOut;
     
     public ServerBilletGUI() {
         initComponents();
