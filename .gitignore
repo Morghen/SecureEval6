@@ -24,3 +24,5 @@ hs_err_pid*
 /ServerBillet/dist/
 /ApplicationBillet/dist/
 /ApplicationBillet/build/
+/ApplicationBillet/nbproject/private/
+/ServerBillet/nbproject/private/

@@ -8,23 +8,24 @@ package serverbillet;
 
 import java.io.PrintStream;
 import java.util.Date;
+import libs.Tracable;
 import libs.redirectMsg;
 
 /**
  *
  * @author Morghen
  */
-public class ServerBilletGUI extends javax.swing.JFrame {
+public class ServerBilletGUI extends javax.swing.JFrame implements Tracable{
 
     private ServerThread thServ = null;
     PrintStream standardOut;
     
     public ServerBilletGUI() {
         initComponents();
-        PrintStream PStream = new PrintStream(new redirectMsg(TraceTextArea));
-        standardOut = System.out;
-        System.setOut(PStream);
-        System.setErr(PStream);
+        //PrintStream PStream = new PrintStream(new redirectMsg(TraceTextArea));
+        //standardOut = System.out;
+        //System.setOut(PStream);
+        //System.setErr(PStream);
         setLocationRelativeTo(null);
     }
 
@@ -113,6 +114,7 @@ public class ServerBilletGUI extends javax.swing.JFrame {
     public void Trace(String txt) {
         Date now = new Date();
         System.out.println(now.toString()+" : "+txt);
+        TraceTextArea.append(now + " "+txt+"\n");
     }
     /**
      * @param args the command line arguments

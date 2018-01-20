@@ -19,6 +19,7 @@ import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextArea;
+import libs.Tracable;
 
 /**
  *
@@ -29,11 +30,11 @@ public class ServerThread extends Thread {
     private final int Port = 9025;
     private ServerSocket SSocket;
     private Socket CSocket;
-    private ServerBilletGUI pere = null;
+    private Tracable pere = null;
     private BufferedReader dis = null;
     private BufferedWriter dos = null;
     
-    public ServerThread(ServerBilletGUI zonetxt) {
+    public ServerThread(Tracable zonetxt) {
         SSocket = null;
         CSocket = null;
         pere = zonetxt;
