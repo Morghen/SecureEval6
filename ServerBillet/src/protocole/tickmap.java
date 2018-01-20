@@ -64,5 +64,13 @@ public class tickmap {
     public void setType(TICKMAPTYPE type) {
         this.type = type;
     }
-
+    
+    @Override
+    public String toString(){
+        return ""+type+"|"+message;
+    }
+    
+    public int getSize(){
+        return toString().length();
+    }
 }
