@@ -5,10 +5,14 @@
  */
 package serverbillet;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -26,6 +30,8 @@ public class ServerThread extends Thread {
     private ServerSocket SSocket;
     private Socket CSocket;
     private ServerBilletGUI pere = null;
+    private BufferedReader dis = null;
+    private BufferedWriter dos = null;
     
     public ServerThread(ServerBilletGUI zonetxt) {
         SSocket = null;
@@ -63,9 +69,8 @@ public class ServerThread extends Thread {
         try
         {
             pere.Trace("Serveur a recu la connexion");
-            DataInputStream dis = new DataInputStream(CSocket.getInputStream());
-            DataOutputStream dos = new DataOutputStream(CSocket.getOutputStream());
-                      
+            dis = new BufferedReader(new InputStreamReader(CSocket.getInputStream()));
+            dos = new BufferedWriter(new OutputStreamWriter(CSocket.getOutputStream()));                    
         }
         catch(EOFException e)
         {

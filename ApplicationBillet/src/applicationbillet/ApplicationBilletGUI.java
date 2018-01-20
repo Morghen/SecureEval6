@@ -5,28 +5,17 @@
  */
 package applicationbillet;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author Morghen
  */
 public class ApplicationBilletGUI extends javax.swing.JFrame {
 
-    Socket CSocket = null;
-    DataInputStream dis = null;
-    DataOutputStream dos = null;
-    
+    /**
+     * Creates new form ApplicationBilletGUI
+     */
     public ApplicationBilletGUI() {
         initComponents();
-        setLocationRelativeTo(null);
-        Connect();
     }
 
     /**
@@ -38,28 +27,17 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        OKButton = new javax.swing.JButton();
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Application Billet");
-
-        OKButton.setText("OK");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(259, 259, 259)
-                .addComponent(OKButton)
-                .addContainerGap(285, Short.MAX_VALUE))
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(160, 160, 160)
-                .addComponent(OKButton)
-                .addContainerGap(195, Short.MAX_VALUE))
+            .addGap(0, 300, Short.MAX_VALUE)
         );
 
         pack();
@@ -101,17 +79,5 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton OKButton;
     // End of variables declaration//GEN-END:variables
-
-    private void Connect() {
-        try {
-            CSocket = new Socket("127.0.0.1",9025);
-            System.out.println("Client connecte : "+CSocket.getInetAddress().toString());
-        } 
-        catch (IOException ex) 
-        {
-            System.err.println("Erreur, pas de connexion : "+ex);
-        }        
-    }
 }
