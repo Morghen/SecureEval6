@@ -144,7 +144,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             bdos.writeDouble(alea);
             md.update(baos.toByteArray());
             msgD = md.digest();
-            msg = login + "#" + Long.toString(temps) + "#" + Double.toString(alea) + "#" + Arrays.toString(msgD);
+            msg = login + "#" + Long.toString(temps) + "#" + Double.toString(alea) + "#" + msgD.toString();
         }
         catch(IOException ex) {
             System.out.println("Erreur d'IO : "+ex);
