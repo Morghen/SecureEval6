@@ -21,6 +21,7 @@ import libs.BDUtilities;
 import libs.TickmapClient;
 import libs.TickmapList;
 import libs.Tracable;
+import protocole.TICKMAPTYPE;
 import protocole.tickmap;
 
 /**
@@ -59,19 +60,8 @@ public class ClientThread extends Thread{
                 while(connect ){
                     int taille = 0;
                     byte[] tmp = null;
-                    tickmap msg = null;
-                    
-                    //lecture du msg
-                    try {
-                        taille = tc.in.readInt();
-                        pere.Trace("Taille = "+taille);
-                        tmp = new byte[taille];
-                        tc.in.readFully(tmp);
-                        msg = new tickmap(new String(tmp));
-                    } catch (IOException ex) {
-                        Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    
+                    tickmap msg = tc.read();
+                    tickmap msgToSend = new tickmap(TICKMAPTYPE.NOK);
                     //traitement du msg
                     //c'est ici qu'on va faire les fonctions du protocol !
                     pere.Trace("Type = "+msg.getType()+" "+msg.getMessage());
@@ -105,9 +95,11 @@ public class ClientThread extends Thread{
                                 } catch (IOException ex) {
                                     Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                                 }
+                                //verif que les deux digest sont les même
                             }
                             else{
                                 //mdp inexistant
+                                msgToSend.setMessage("mdp inexistant");
                             }
                             break;
                         case DISCONECT:
@@ -116,6 +108,7 @@ public class ClientThread extends Thread{
                         case ACHAT:
                             break;
                     }
+                    tc.write(msgToSend);
                 }
                 pere.Trace("ThCli: fin client");
             }

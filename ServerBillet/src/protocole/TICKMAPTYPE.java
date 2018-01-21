@@ -5,6 +5,7 @@
  */
 package protocole;
 
+import com.sun.corba.se.spi.ior.ObjectKey;
 import javafx.scene.chart.AreaChart;
 
 /**
@@ -12,5 +13,5 @@ import javafx.scene.chart.AreaChart;
  * @author 'Toine
  */
 public enum TICKMAPTYPE {
-    CONNECT, DISCONECT, ACHAT
+    CONNECT, DISCONECT, ACHAT, OK, NOK, ERROR
 }

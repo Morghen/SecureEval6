@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import protocole.tickmap;
 
 /**
  *
@@ -30,9 +31,32 @@ public class TickmapClient {
         try {
             in = new DataInputStream(clientSoc.getInputStream());
             out = new DataOutputStream(clientSoc.getOutputStream());
+            
         } catch (IOException ex) {
             Logger.getLogger(TickmapClient.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void write(tickmap t){
+        try {
+            out.writeInt(t.getLength());
+        out.write(t.getBytes());
+        } catch (Exception ex) {
+            Logger.getLogger(TickmapClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public tickmap read() {
+        tickmap ret = null;
+        try {
+            int taille = in.readInt();
+            byte[] bytes = new byte[taille];
+            in.read(bytes);
+            ret = new tickmap(new String(bytes));
+        } catch (Exception ex) {
+            Logger.getLogger(TickmapClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ret;
     }
 
     /**
