@@ -53,7 +53,7 @@ public class ServerThread extends Thread {
         }
         catch(IOException e)
         {
-            pere.Trace("Erreur port d'ecoute : "+e);
+            pere.Trace("ThServ : Erreur port d'ecoute : "+e);
         }
         listCli = new LinkedList<>();
         for(int i=0; i<NbrCliTh; i++){
@@ -65,20 +65,20 @@ public class ServerThread extends Thread {
     public void run() {
         Running = true;
         while(Running ){
-            pere.Trace("Serveur en attente");
+            pere.Trace("ThServ : Serveur en attente");
             try
             {
                 TickmapClient tc = new TickmapClient(SSocket.accept());
                 tickmapList.addTMClient(tc);
-                pere.Trace("Serveur a recu la connexion");
+                pere.Trace("ThServ :Serveur a recu la connexion");
             }
             catch(SocketException e)
             {
-                pere.Trace("Accept interrompu : "+e);
+                pere.Trace("ThServ : Accept interrompu : "+e);
             }
             catch(IOException e)
             {
-                pere.Trace("Erreur accept : "+e);
+                pere.Trace("ThServ : Erreur accept : "+e);
             }
         }
     }
@@ -88,7 +88,7 @@ public class ServerThread extends Thread {
             Running = false;
             SSocket.close();
         } catch (IOException ex) {
-            pere.Trace("Erreur fermeture de connection : "+ex);
+            pere.Trace("ThServ : Erreur fermeture de connection : "+ex);
         }
     }
 
