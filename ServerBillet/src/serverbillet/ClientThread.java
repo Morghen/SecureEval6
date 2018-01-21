@@ -57,8 +57,10 @@ public class ClientThread extends Thread{
                     
                     //traitement du msg
                     //c'est ici qu'on va faire les fonctions du protocol !
+                    pere.Trace("Type = "+msg.getType()+" "+msg.getMessage());
                     switch(msg.getType()){
                         case CONNECT:
+                            
                             break;
                         case DISCONECT:
                             connect = false;

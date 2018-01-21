@@ -156,7 +156,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             System.out.println("Erreur de provider : "+ex);
         }
         //envois du msg
-        msgtickmap.setMessage(msg);
+        msgtickmap.setMessage(msgD.toString());
         try {
             dos.writeInt(msgtickmap.getSize());
             dos.write(msgtickmap.toString().getBytes());

@@ -97,7 +97,7 @@ public class ServerBilletGUI extends javax.swing.JFrame implements Tracable{
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         if(thServ == null)
         {
-            Trace("CDemarrage serveur");
+            Trace("Demarrage serveur");
             thServ = new ServerThread(this);
             thServ.start();
         }       

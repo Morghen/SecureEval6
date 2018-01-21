@@ -45,7 +45,6 @@ public class ServerThread extends Thread {
         SSocket = null;
         pere = zonetxt;
         
-        listCli = new LinkedList<>();
         tickmapList = new TickmapList();
         
         try
