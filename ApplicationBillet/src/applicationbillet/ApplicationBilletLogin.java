@@ -133,7 +133,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         byte[] msgD = null;
         try
         {
-            MessageDigest md = MessageDigest.getInstance("SHA-1","BC");
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
             md.update(login.getBytes());
             md.update(mdp.getBytes());
             long temps = (new Date().getTime());
@@ -147,13 +147,10 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             msg = login + "#" + Long.toString(temps) + "#" + Double.toString(alea) + "#" + Arrays.toString(msgD);
         }
         catch(IOException ex) {
-            System.out.println("Erreur d'IO : "+ex);
+            Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
         catch(NoSuchAlgorithmException ex) {
-            System.out.println("Erreur d'algorithme : "+ex);
-        }
-        catch(NoSuchProviderException ex) {
-            System.out.println("Erreur de provider : "+ex);
+            Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
         //envois du msg
         msgtickmap.setMessage(msgD.toString());
