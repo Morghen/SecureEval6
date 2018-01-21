@@ -35,7 +35,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
     public boolean connected = false;
     
     public ApplicationBilletLogin() {
-        Security.addProvider(new BouncyCastleProvider());
+        //Security.addProvider(new BouncyCastleProvider());
         initComponents();
         setLocationRelativeTo(null);    
         Connect();
@@ -155,7 +155,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         }
         
         //envois du msg
-        msgtickmap.setMessage(msg);
+        msgtickmap.setMessage(msgD.toString());
         try {
             dos.writeInt(msgtickmap.getSize());
             dos.write(msgtickmap.toString().getBytes());
