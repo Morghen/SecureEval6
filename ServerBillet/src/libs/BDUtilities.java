@@ -19,14 +19,14 @@ import java.sql.Statement;
  * @author 'Toine
  */
 public class BDUtilities {
-   private String nameConnection;
+    private String nameConnection;
     private String login;
     private String motdepasse;
     private Connection con;
     private Statement instruc;
 
     //</editor-fold>
-    public BDUtilities(String ip, int port) throws ClassNotFoundException, Exception {
+    public BDUtilities(String ip, int port) throws ClassNotFoundException, SQLException {
         String tmpCon;
         login = "user";
         motdepasse = "toor";

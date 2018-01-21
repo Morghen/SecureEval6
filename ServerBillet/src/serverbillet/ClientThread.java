@@ -7,8 +7,10 @@ package serverbillet;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import libs.BDUtilities;
 import libs.TickmapClient;
 import libs.TickmapList;
 import libs.Tracable;
@@ -24,10 +26,16 @@ public class ClientThread extends Thread{
     private TickmapClient tc = null;
     private boolean running = false;
     private Tracable pere = null;
+    private BDUtilities uti=null;
 
     public ClientThread(TickmapList ptc, Tracable t) {
         tl = ptc;
         pere = t;
+        try {
+            uti = new BDUtilities("localhost", 5500);
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     
