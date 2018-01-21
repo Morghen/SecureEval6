@@ -64,7 +64,7 @@ public class ClientThread extends Thread{
                     tickmap msgToSend = new tickmap(TICKMAPTYPE.NOK);
                     //traitement du msg
                     //c'est ici qu'on va faire les fonctions du protocol !
-                    pere.Trace("Type = "+msg.getType()+" "+msg.getMessage());
+                    pere.Trace("ThCli reception "+msg.toString());
                     switch(msg.getType()){
                         case CONNECT:
                             StringTokenizer strTok = new StringTokenizer(msg.getMessage(), "#");
@@ -97,10 +97,10 @@ public class ClientThread extends Thread{
                                     Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                                 //verif que les deux digest sont les même
-                                pere.Trace(login+" -- "+mdp);
+                                //pere.Trace(login+" -- "+mdp);
                                 String dig = new String(md.digest());
-                                pere.Trace(dig);
-                                pere.Trace(digest);
+                                //pere.Trace(dig);
+                                //pere.Trace(digest);
                                 if(dig.equals(digest)){
                                     msgToSend.setType(TICKMAPTYPE.OK);
                                     msgToSend.setMessage("indentification OK");
@@ -119,6 +119,7 @@ public class ClientThread extends Thread{
                         case ACHAT:
                             break;
                     }
+                    pere.Trace("ThCli envois : "+msgToSend.toString());
                     tc.write(msgToSend);
                 }
                 pere.Trace("ThCli: fin client");
