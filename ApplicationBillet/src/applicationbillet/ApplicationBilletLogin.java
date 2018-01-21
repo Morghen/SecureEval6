@@ -36,7 +36,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
     public boolean connected = false;
     
     public ApplicationBilletLogin() {
-        //Security.addProvider(new BouncyCastleProvider());
+        Security.addProvider(new BouncyCastleProvider());
         initComponents();
         setLocationRelativeTo(null);    
         Connect();
