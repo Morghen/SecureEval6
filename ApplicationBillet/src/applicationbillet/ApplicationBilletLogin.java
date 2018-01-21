@@ -153,6 +153,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         catch(NoSuchProviderException ex) {
             System.out.println("Erreur de provider : "+ex);
         }
+        
         //envois du msg
         msgtickmap.setMessage(msg);
         try {
