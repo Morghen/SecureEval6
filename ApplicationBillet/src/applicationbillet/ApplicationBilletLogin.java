@@ -129,9 +129,9 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         
         //on fait le truc crypto ici     
         System.out.println("Instanciation du message digest");
+        byte[] msgD = null;
         try
         {
-            byte[] msgD = null;
             MessageDigest md = MessageDigest.getInstance("SHA-1","BC");
             md.update(login.getBytes());
             md.update(mdp.getBytes());
@@ -142,7 +142,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             bdos.writeLong(temps);
             bdos.writeDouble(alea);
             md.update(baos.toByteArray());
-            msgD = md.digest(); 
+            msgD = md.digest();
         }
         catch(IOException ex) {
             System.out.println("Erreur d'IO : "+ex);
@@ -153,6 +153,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         catch(NoSuchProviderException ex) {
             System.out.println("Erreur de provider : "+ex);
         }
+        System.out.println("Digest = "+msgD.toString());
         
         //envois du msg
         msgtickmap.setMessage(msg);
