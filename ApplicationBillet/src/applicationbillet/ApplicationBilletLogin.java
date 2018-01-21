@@ -5,17 +5,20 @@
  */
 package applicationbillet;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import java.security.Security;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import libs.libUtils;
 import protocole.TICKMAPTYPE;
 import protocole.tickmap;
 
@@ -24,7 +27,7 @@ import protocole.tickmap;
  * @author Morghen
  */
 public class ApplicationBilletLogin extends javax.swing.JFrame {
-
+    
     Socket CSocket = null;
     DataInputStream dis = null;
     DataOutputStream dos = null;
@@ -32,6 +35,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
     public boolean connected = false;
     
     public ApplicationBilletLogin() {
+        Security.addProvider(new BouncyCastleProvider());
         initComponents();
         setLocationRelativeTo(null);    
         Connect();
@@ -123,8 +127,32 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         String mdp = PasswdField.getText();
         String msg = "";
         
-        //on fait le truc crypto ici
-        
+        //on fait le truc crypto ici     
+        System.out.println("Instanciation du message digest");
+        try
+        {
+            byte[] msgD = null;
+            MessageDigest md = MessageDigest.getInstance("SHA-1","BC");
+            md.update(login.getBytes());
+            md.update(mdp.getBytes());
+            long temps = (new Date().getTime());
+            double alea = Math.random();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream bdos = new DataOutputStream(baos);
+            bdos.writeLong(temps);
+            bdos.writeDouble(alea);
+            md.update(baos.toByteArray());
+            msgD = md.digest(); 
+        }
+        catch(IOException ex) {
+            System.out.println("Erreur d'IO : "+ex);
+        }
+        catch(NoSuchAlgorithmException ex) {
+            System.out.println("Erreur d'algorithme : "+ex);
+        }
+        catch(NoSuchProviderException ex) {
+            System.out.println("Erreur de provider : "+ex);
+        }
         //envois du msg
         msgtickmap.setMessage(msg);
         try {
