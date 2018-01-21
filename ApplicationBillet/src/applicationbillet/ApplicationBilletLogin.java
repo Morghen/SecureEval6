@@ -15,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import java.security.Security;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -143,6 +144,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             bdos.writeDouble(alea);
             md.update(baos.toByteArray());
             msgD = md.digest();
+            msg = login + "#" + Long.toString(temps) + "#" + Double.toString(alea) + "#" + Arrays.toString(msgD);
         }
         catch(IOException ex) {
             System.out.println("Erreur d'IO : "+ex);
@@ -153,7 +155,6 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         catch(NoSuchProviderException ex) {
             System.out.println("Erreur de provider : "+ex);
         }
-        
         //envois du msg
         msgtickmap.setMessage(msgD.toString());
         try {
