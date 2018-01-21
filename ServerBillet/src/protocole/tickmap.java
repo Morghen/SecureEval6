@@ -74,7 +74,10 @@ public class tickmap {
         return ""+type+"|"+message;
     }
     
-    public int getSize(){
-        return toString().length();
+    public byte[] getBytes(){
+        return toString().getBytes();
+    }
+    public int getLength(){
+        return toString().getBytes().length;
     }
 }

@@ -133,8 +133,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         byte[] msgD = null;
         try
         {
-            MessageDigest md = MessageDigest.getInstance("SHA-1","BC");
-            md.update(login.getBytes());
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
             md.update(mdp.getBytes());
             long temps = (new Date().getTime());
             double alea = Math.random();
@@ -143,23 +142,20 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             bdos.writeLong(temps);
             bdos.writeDouble(alea);
             md.update(baos.toByteArray());
-            msgD = md.digest();
-            msg = login + "#" + Long.toString(temps) + "#" + Double.toString(alea) + "#" + msgD.toString();
+            msg = ""+login + "#" + temps + "#" + alea + "#" + new String(md.digest());
         }
         catch(IOException ex) {
-            System.out.println("Erreur d'IO : "+ex);
+            Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
         catch(NoSuchAlgorithmException ex) {
-            System.out.println("Erreur d'algorithme : "+ex);
-        }
-        catch(NoSuchProviderException ex) {
-            System.out.println("Erreur de provider : "+ex);
+            Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
         //envois du msg
-        msgtickmap.setMessage(msgD.toString());
+        msgtickmap.setMessage(msg);
         try {
-            dos.writeInt(msgtickmap.getSize());
-            dos.write(msgtickmap.toString().getBytes());
+            dos.writeInt(msgtickmap.getLength());
+            dos.write(msgtickmap.getBytes());
+            dos.flush();
         } catch (IOException ex) {
             Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
         }

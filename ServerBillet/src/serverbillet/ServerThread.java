@@ -58,6 +58,7 @@ public class ServerThread extends Thread {
         listCli = new LinkedList<>();
         for(int i=0; i<NbrCliTh; i++){
             listCli.add(new ClientThread(tickmapList, pere));
+            listCli.get(i).start();
         }
     }
                

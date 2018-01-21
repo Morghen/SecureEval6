@@ -39,6 +39,7 @@ public class ClientThread extends Thread{
             tc = tl.getTMClient();
             if(tc != null){
                 //on a un client donc on peut excecuter ici les fcts
+                pere.Trace("ThCli: on a un nouveau client");
                 boolean connect = true;
                 while(connect ){
                     int taille = 0;
@@ -48,9 +49,10 @@ public class ClientThread extends Thread{
                     //lecture du msg
                     try {
                         taille = tc.in.readInt();
+                        pere.Trace("Taille = "+taille);
                         tmp = new byte[taille];
                         tc.in.readFully(tmp);
-                        msg = new tickmap(tmp.toString());
+                        msg = new tickmap(new String(tmp));
                     } catch (IOException ex) {
                         Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -69,6 +71,7 @@ public class ClientThread extends Thread{
                             break;
                     }
                 }
+                pere.Trace("ThCli: fin client");
             }
         }
     }
