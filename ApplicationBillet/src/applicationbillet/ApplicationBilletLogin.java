@@ -134,7 +134,6 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         try
         {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
-            md.update(login.getBytes());
             md.update(mdp.getBytes());
             long temps = (new Date().getTime());
             double alea = Math.random();
@@ -143,8 +142,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             bdos.writeLong(temps);
             bdos.writeDouble(alea);
             md.update(baos.toByteArray());
-            msgD = md.digest();
-            msg = login + "#" + temps + "#" + alea + "#" + new String(msgD);
+            msg = ""+login + "#" + temps + "#" + alea + "#" + new String(md.digest());
         }
         catch(IOException ex) {
             Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -155,8 +153,9 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         //envois du msg
         msgtickmap.setMessage(msg);
         try {
-            dos.writeInt(msgtickmap.getSize());
-            dos.write(msgtickmap.toString().getBytes());
+            dos.writeInt(msgtickmap.getLength());
+            dos.write(msgtickmap.getBytes());
+            dos.flush();
         } catch (IOException ex) {
             Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
