@@ -6,6 +6,8 @@
 package applicationbillet;
 
 import com.sun.glass.ui.Cursor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,7 +25,14 @@ public class main {
         
         applog = new ApplicationBilletLogin();
         applog.setVisible(true);
-
+        while(applog.connected == false){
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        applog.setVisible(false);
         appgui = new ApplicationBilletGUI();
         appgui.setVisible(true);
     }

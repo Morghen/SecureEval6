@@ -52,7 +52,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         PasswdLabel = new javax.swing.JLabel();
         CancelButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Application Billet");
 
         OKButton.setText("OK");
