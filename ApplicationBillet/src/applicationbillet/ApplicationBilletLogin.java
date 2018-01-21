@@ -153,7 +153,12 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         
         if(response.getType() == TICKMAPTYPE.OK){
             connected = true;
+            System.out.println("Connecter OK");
+        }else{
+            connected = false;
+            System.out.println("Connecter FAILED");
         }
+        System.out.println(response.toString());
     }//GEN-LAST:event_OKButtonActionPerformed
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed

@@ -71,6 +71,7 @@ public class ClientThread extends Thread{
                             String login = strTok.nextToken();
                             long temps = Long.parseLong(strTok.nextToken());
                             double alea = Double.parseDouble(strTok.nextToken());
+                            String digest = strTok.nextToken();
                             String mdp = null;
                             try {
                                 ResultSet rs = uti.query("SELECT password FROM client WHERE identifiant like '"+login+"'");
@@ -81,21 +82,31 @@ public class ClientThread extends Thread{
                             }
                             if(mdp != null){
                                 //le mdp existe
-                                MessageDigest md;
+                                MessageDigest md=null;
                                 try {
                                     md = MessageDigest.getInstance("SHA-1");
-
+                                    md.update(mdp.getBytes());
                                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                                     DataOutputStream bdos = new DataOutputStream(baos);
                                     bdos.writeLong(temps);
                                     bdos.writeDouble(alea);
                                     md.update(baos.toByteArray());
-                                } catch (NoSuchAlgorithmException ex) {
+                                } catch (NoSuchAlgorithmException ex ) {
                                     Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                                 } catch (IOException ex) {
                                     Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                                 //verif que les deux digest sont les même
+                                pere.Trace(login+" -- "+mdp);
+                                String dig = new String(md.digest());
+                                pere.Trace(dig);
+                                pere.Trace(digest);
+                                if(dig.equals(digest)){
+                                    msgToSend.setType(TICKMAPTYPE.OK);
+                                    msgToSend.setMessage("indentification OK");
+                                }else{
+                                    msgToSend.setMessage("MOT DE PASSE incorrect");
+                                }
                             }
                             else{
                                 //mdp inexistant
