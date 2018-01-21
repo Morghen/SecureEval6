@@ -5,9 +5,16 @@
  */
 package serverbillet;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import libs.BDUtilities;
@@ -70,7 +77,38 @@ public class ClientThread extends Thread{
                     pere.Trace("Type = "+msg.getType()+" "+msg.getMessage());
                     switch(msg.getType()){
                         case CONNECT:
-                            
+                            StringTokenizer strTok = new StringTokenizer(msg.getMessage(), "#");
+                            String login = strTok.nextToken();
+                            long temps = Long.parseLong(strTok.nextToken());
+                            double alea = Double.parseDouble(strTok.nextToken());
+                            String mdp = null;
+                            try {
+                                ResultSet rs = uti.query("SELECT password FROM client WHERE identifiant like '"+login+"'");
+                                rs.next();
+                                mdp = rs.getString(1);
+                            } catch (Exception ex) {
+                                //Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            if(mdp != null){
+                                //le mdp existe
+                                MessageDigest md;
+                                try {
+                                    md = MessageDigest.getInstance("SHA-1");
+
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    DataOutputStream bdos = new DataOutputStream(baos);
+                                    bdos.writeLong(temps);
+                                    bdos.writeDouble(alea);
+                                    md.update(baos.toByteArray());
+                                } catch (NoSuchAlgorithmException ex) {
+                                    Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (IOException ex) {
+                                    Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                            else{
+                                //mdp inexistant
+                            }
                             break;
                         case DISCONECT:
                             connect = false;
