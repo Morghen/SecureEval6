@@ -15,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import libs.TickmapClient;
 import protocole.TICKMAPTYPE;
 import protocole.tickmap;
 
@@ -24,9 +25,7 @@ import protocole.tickmap;
  */
 public class ApplicationBilletLogin extends javax.swing.JFrame {
     
-    Socket CSocket = null;
-    DataInputStream dis = null;
-    DataOutputStream dos = null;
+    TickmapClient tc = null;
     
     public boolean connected = false;
     
@@ -147,12 +146,13 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         }
         //envois du msg
         msgtickmap.setMessage(msg);
-        try {
-            dos.writeInt(msgtickmap.getLength());
-            dos.write(msgtickmap.getBytes());
-            dos.flush();
-        } catch (IOException ex) {
-            Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
+        tc.write(msgtickmap);
+        
+        
+        tickmap response = tc.read();
+        
+        if(response.getType() == TICKMAPTYPE.OK){
+            connected = true;
         }
     }//GEN-LAST:event_OKButtonActionPerformed
 
@@ -209,10 +209,9 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
     private void Connect() {
         try 
         {
-            CSocket = new Socket("127.0.0.1",9025);
+            Socket CSocket = new Socket("127.0.0.1",9025);
             System.out.println("Client connecte : "+CSocket.getInetAddress().toString());
-            dis = new DataInputStream(CSocket.getInputStream());
-            dos = new DataOutputStream(CSocket.getOutputStream());
+            tc = new TickmapClient(CSocket);
             System.out.println("DIS & DOS acquis");
         }
         catch (IOException ex)
@@ -223,13 +222,13 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
 
     private void Disconnect() {
         
-        if(CSocket == null)
+        if(tc == null)
             System.exit(0);
         else
         {
             try 
             {
-                CSocket.close();
+                tc.getClientSoc().close();
                 System.exit(0);
             } catch (IOException ex) {
                 System.out.println("Erreur de deconnection : "+ex);
