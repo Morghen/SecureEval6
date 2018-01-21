@@ -144,7 +144,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             bdos.writeDouble(alea);
             md.update(baos.toByteArray());
             msgD = md.digest();
-            msg = login + "#" + Long.toString(temps) + "#" + Double.toString(alea) + "#" + Arrays.toString(msgD);
+            msg = login + "#" + temps + "#" + alea + "#" + new String(msgD);
         }
         catch(IOException ex) {
             Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -153,7 +153,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
         //envois du msg
-        msgtickmap.setMessage(msgD.toString());
+        msgtickmap.setMessage(msg);
         try {
             dos.writeInt(msgtickmap.getSize());
             dos.write(msgtickmap.toString().getBytes());

@@ -49,9 +49,10 @@ public class ClientThread extends Thread{
                     //lecture du msg
                     try {
                         taille = tc.in.readInt();
+                        pere.Trace("Taille = "+taille);
                         tmp = new byte[taille];
                         tc.in.readFully(tmp);
-                        msg = new tickmap(tmp.toString());
+                        msg = new tickmap(new String(tmp));
                     } catch (IOException ex) {
                         Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                     }
