@@ -45,6 +45,7 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
         tc.write(new tickmap(TICKMAPTYPE.GETLISTVOL));
         tickmap response = tc.read();
         if(response.getType() == TICKMAPTYPE.GETLISTVOL){
+            System.out.println("Response ListVols = "+response.getMessage());
             ByteArrayInputStream bais = new ByteArrayInputStream(response.getMessage().getBytes());
             try {
                 ObjectInputStream ois = new ObjectInputStream(bais);

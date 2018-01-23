@@ -121,7 +121,7 @@ public class ClientThread extends Thread{
                             connect = false;
                             break;
                         case GETLISTVOL:
-                            List<Vols> lv = new LinkedList<>();
+                            LinkedList<Vols> lv = new LinkedList<>();
                             ResultSet rs=null;
                             try {
                                 rs = uti.query("SELECT * FROM vols");
