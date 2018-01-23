@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import libs.TickmapClient;
+import org.bouncycastle.util.encoders.Base64;
 import protocole.TICKMAPTYPE;
 import protocole.tickmap;
 
@@ -46,7 +47,7 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
         tickmap response = tc.read();
         if(response.getType() == TICKMAPTYPE.GETLISTVOL){
             System.out.println("Response ListVols = "+response.getMessage());
-            ByteArrayInputStream bais = new ByteArrayInputStream(response.getMessage().getBytes());
+            ByteArrayInputStream bais = new ByteArrayInputStream(Base64.decode(response.getMessage().getBytes()));
             try {
                 ObjectInputStream ois = new ObjectInputStream(bais);
                 lv = (LinkedList<Vols>) ois.readObject();
@@ -169,6 +170,7 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
 
     private static class MyModel implements TableModel {
         String[] columnName = {"idVols","destination","","","",""};
+        Class<?>[] classes = {};
 
         List<Vols> l = null;
         
@@ -193,7 +195,7 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
 
         @Override
         public Class<?> getColumnClass(int columnIndex) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return String.class;
         }
 
         @Override
@@ -225,22 +227,22 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
                     ret = v.getNbrDispo();
                     break;
             }
-            return ret;
+            return ret.toString();
         }
 
         @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
         public void addTableModelListener(TableModelListener l) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
         public void removeTableModelListener(TableModelListener l) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }
 }

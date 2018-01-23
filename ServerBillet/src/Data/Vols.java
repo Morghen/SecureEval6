@@ -8,7 +8,6 @@ package Data;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -18,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author 'Toine
  */
-public class Vols implements Serializable{
+public class Vols implements Serializable, Cloneable{
     
     private int idVols;
 
