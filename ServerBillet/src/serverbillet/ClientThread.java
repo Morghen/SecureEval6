@@ -116,7 +116,12 @@ public class ClientThread extends Thread{
                         case DISCONECT:
                             connect = false;
                             break;
+                        case GETLISTVOL:
+                            
+                            break;
                         case ACHAT:
+                            break;
+                        case CONFIRMATION:
                             break;
                     }
                     pere.Trace("ThCli envois : "+msgToSend.toString());

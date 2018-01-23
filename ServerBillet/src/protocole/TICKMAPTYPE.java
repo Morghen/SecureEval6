@@ -13,5 +13,5 @@ import javafx.scene.chart.AreaChart;
  * @author 'Toine
  */
 public enum TICKMAPTYPE {
-    CONNECT, DISCONECT, ACHAT, OK, NOK, ERROR
+    CONNECT, DISCONECT, GETLISTVOL,ACHAT, CONFIRMATION,OK, NOK, ERROR
 }
