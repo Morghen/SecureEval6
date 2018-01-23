@@ -73,6 +73,7 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         listeVolsTable = new javax.swing.JTable();
         refreshButton = new javax.swing.JButton();
+        achatButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -96,6 +97,13 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
             }
         });
 
+        achatButton.setText("Acheter");
+        achatButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                achatButtonMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -104,8 +112,10 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 710, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(71, 71, 71)
-                .addComponent(refreshButton)
-                .addContainerGap(93, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(refreshButton)
+                    .addComponent(achatButton))
+                .addContainerGap(89, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,6 +126,8 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(refreshButton)
+                .addGap(52, 52, 52)
+                .addComponent(achatButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -126,6 +138,19 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
     private void refreshButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshButtonMouseClicked
         RefreshList();
     }//GEN-LAST:event_refreshButtonMouseClicked
+
+    private void achatButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_achatButtonMouseClicked
+        try{
+            if(listeVolsTable.getSelectedRow() >= 0){
+                //
+                Vols vol = lv.get(listeVolsTable.getSelectedRow());
+                AchatBillet ab = new AchatBillet(this, true, vol, tc);
+                ab.setVisible(true);
+            }
+        }catch(Exception e){
+            
+        }
+    }//GEN-LAST:event_achatButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -163,6 +188,7 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton achatButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable listeVolsTable;
     private javax.swing.JButton refreshButton;

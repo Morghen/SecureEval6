@@ -40,7 +40,7 @@ public class TickmapClient {
     public void write(tickmap t){
         try {
             out.writeInt(t.getLength());
-        out.write(t.getBytes());
+            out.write(t.getBytes());
         } catch (Exception ex) {
             Logger.getLogger(TickmapClient.class.getName()).log(Level.SEVERE, null, ex);
         }
