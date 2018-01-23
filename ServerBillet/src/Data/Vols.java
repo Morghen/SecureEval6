@@ -50,6 +50,11 @@ public class Vols implements Serializable{
         nbrDispo = Integer.parseInt(strTok.nextToken());
     }
 
+    @Override
+    public String toString() {
+        return "Vols{" + "idVols=" + idVols + ", destination=" + destination + ", dateDepart=" + dateDepart + ", dateArriver=" + dateArriver + ", nbrBillet=" + nbrBillet + ", nbrDispo=" + nbrDispo + '}';
+    }
+
     public int getNbrDispo() {
         return nbrDispo;
     }
