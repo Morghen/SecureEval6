@@ -5,15 +5,19 @@
  */
 package serverbillet;
 
+import Data.Vols;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -117,6 +121,29 @@ public class ClientThread extends Thread{
                             connect = false;
                             break;
                         case GETLISTVOL:
+                            List<Vols> lv = new LinkedList<>();
+                            ResultSet rs=null;
+                            try {
+                                rs = uti.query("SELECT * FROM vols");
+                            } catch (SQLException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            try {
+                                while(rs.next()){
+                                    lv.add(new Vols(rs));
+                                }
+                            } catch (SQLException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            try {
+                                ObjectOutputStream oos = new ObjectOutputStream(baos);
+                                oos.writeObject(lv);
+                            } catch (IOException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            String msgList = new String(baos.toByteArray());
+                            msgToSend = new tickmap(TICKMAPTYPE.GETLISTVOL, msgList);
                             
                             break;
                         case ACHAT:

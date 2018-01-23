@@ -6,9 +6,13 @@
 package Data;
 
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -48,6 +52,19 @@ public class Vols implements Serializable{
         dateArriver=dateArriver;
         nbrBillet = Integer.parseInt(strTok.nextToken());
         nbrDispo = Integer.parseInt(strTok.nextToken());
+    }
+    
+    public Vols(ResultSet rs){
+        try {
+            idVols = rs.getInt("idVols");
+            destination = rs.getString("destination");
+            dateDepart= rs.getDate("heureDepart");
+            dateArriver=rs.getDate("heureArriver");
+            nbrBillet = rs.getInt("nbrBillet");
+            nbrDispo = rs.getInt("nbrDispo");
+        } catch (SQLException ex) {
+            Logger.getLogger(Vols.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

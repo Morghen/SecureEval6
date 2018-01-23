@@ -25,15 +25,20 @@ import protocole.tickmap;
  */
 public class ApplicationBilletLogin extends javax.swing.JFrame {
     
-    TickmapClient tc = null;
+    public TickmapClient tc = null;
     
     public boolean connected = false;
     
+    
     public ApplicationBilletLogin() {
+        initComponents();
+    }
+    
+    public ApplicationBilletLogin(TickmapClient ptc) {
         //Security.addProvider(new BouncyCastleProvider());
         initComponents();
-        setLocationRelativeTo(null);    
-        Connect();
+        setLocationRelativeTo(null);
+        tc = ptc;
     }
 
     /**
@@ -163,7 +168,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
         System.out.println("Deconnection");
-        Disconnect();
+        System.exit(1);
     }//GEN-LAST:event_CancelButtonActionPerformed
 
     /**
@@ -211,33 +216,4 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
     private javax.swing.JLabel PasswdLabel;
     // End of variables declaration//GEN-END:variables
 
-    private void Connect() {
-        try 
-        {
-            Socket CSocket = new Socket("127.0.0.1",9025);
-            System.out.println("Client connecte : "+CSocket.getInetAddress().toString());
-            tc = new TickmapClient(CSocket);
-            System.out.println("DIS & DOS acquis");
-        }
-        catch (IOException ex)
-        {
-            System.err.println("Erreur, pas de connexion : "+ex);
-        }       
-    }
-
-    private void Disconnect() {
-        
-        if(tc == null)
-            System.exit(0);
-        else
-        {
-            try 
-            {
-                tc.getClientSoc().close();
-                System.exit(0);
-            } catch (IOException ex) {
-                System.out.println("Erreur de deconnection : "+ex);
-            }          
-        }
-    }
 }

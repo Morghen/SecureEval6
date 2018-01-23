@@ -6,8 +6,11 @@
 package applicationbillet;
 
 import com.sun.glass.ui.Cursor;
+import java.io.IOException;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import libs.TickmapClient;
 
 /**
  *
@@ -22,6 +25,17 @@ public class main {
         // TODO code application logic here
         ApplicationBilletLogin applog = null;
         ApplicationBilletGUI appgui = null;
+        TickmapClient tc = null;
+        Socket CSocket;
+        try {
+            CSocket = new Socket("127.0.0.1",9025);
+            System.out.println("Client connecte : "+CSocket.getInetAddress().toString());
+            tc = new TickmapClient(CSocket);
+            System.out.println("DIS & DOS acquis");
+        } catch (IOException ex) {
+            Logger.getLogger(main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         
         applog = new ApplicationBilletLogin();
         applog.setVisible(true);
