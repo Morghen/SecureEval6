@@ -37,7 +37,7 @@ public class main {
         }
         
         
-        applog = new ApplicationBilletLogin();
+        applog = new ApplicationBilletLogin(tc);
         applog.setVisible(true);
         while(applog.connected == false){
             try {
@@ -47,7 +47,7 @@ public class main {
             }
         }
         applog.setVisible(false);
-        appgui = new ApplicationBilletGUI();
+        appgui = new ApplicationBilletGUI(tc);
         appgui.setVisible(true);
     }
     

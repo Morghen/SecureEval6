@@ -5,7 +5,19 @@
  */
 package applicationbillet;
 
+import Data.Vols;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
 import libs.TickmapClient;
+import protocole.TICKMAPTYPE;
+import protocole.tickmap;
 
 /**
  *
@@ -14,6 +26,8 @@ import libs.TickmapClient;
 public class ApplicationBilletGUI extends javax.swing.JFrame {
 
     public TickmapClient tc = null;
+    
+    public List<Vols> lv = null;
     
     /**
      * Creates new form ApplicationBilletGUI
@@ -26,6 +40,24 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
         initComponents();
         tc = ptc;
     }
+    
+    public void RefreshList(){
+        tc.write(new tickmap(TICKMAPTYPE.GETLISTVOL));
+        tickmap response = tc.read();
+        if(response.getType() == TICKMAPTYPE.GETLISTVOL){
+            ByteArrayInputStream bais = new ByteArrayInputStream(response.getMessage().getBytes());
+            try {
+                ObjectInputStream ois = new ObjectInputStream(bais);
+                lv = (LinkedList<Vols>) ois.readObject();
+            } catch (IOException ex) {
+                Logger.getLogger(ApplicationBilletGUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(ApplicationBilletGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        listeVolsTable.setModel(new MyModel(lv));
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -38,8 +70,9 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         listeVolsTable = new javax.swing.JTable();
+        refreshButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         listeVolsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -54,6 +87,13 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(listeVolsTable);
 
+        refreshButton.setText("refresh");
+        refreshButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                refreshButtonMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -61,7 +101,9 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 710, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(98, Short.MAX_VALUE))
+                .addGap(71, 71, 71)
+                .addComponent(refreshButton)
+                .addContainerGap(93, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -69,11 +111,19 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane1)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(refreshButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void refreshButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_refreshButtonMouseClicked
+        RefreshList();
+    }//GEN-LAST:event_refreshButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -113,5 +163,83 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable listeVolsTable;
+    private javax.swing.JButton refreshButton;
     // End of variables declaration//GEN-END:variables
+
+    private static class MyModel implements TableModel {
+        String[] columnName = {"idVols","destination","","","",""};
+
+        List<Vols> l = null;
+        
+        public MyModel(List e) {
+            l = e;
+        }
+
+        @Override
+        public int getRowCount() {
+            return l.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return 6;
+        }
+
+        @Override
+        public String getColumnName(int columnIndex) {
+            return columnName[columnIndex];
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return false;
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            Vols v = l.get(rowIndex);
+            Object ret=null;
+            switch(columnIndex){
+                case 0:
+                    ret = v.getIdVols();
+                    break;
+                case 1:
+                    ret = v.getDestination();
+                    break;
+                case 2:
+                    ret = v.getDateArriver();
+                    break;
+                case 3:
+                    ret = v.getDateDepart();
+                    break;
+                case 4:
+                    ret = v.getNbrBillet();
+                    break;
+                case 5:
+                    ret = v.getNbrDispo();
+                    break;
+            }
+            return ret;
+        }
+
+        @Override
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void addTableModelListener(TableModelListener l) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void removeTableModelListener(TableModelListener l) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    }
 }
