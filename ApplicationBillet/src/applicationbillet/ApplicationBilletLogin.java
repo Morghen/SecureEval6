@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import libs.TickmapClient;
@@ -47,6 +48,11 @@ import sun.misc.BASE64Encoder;
 public class ApplicationBilletLogin extends javax.swing.JFrame {
     
     public TickmapClient tc = null;
+    
+    private PublicKey keyServ = null;
+    private PrivateKey keyCli = null;
+    private SecretKey keySecret = null;
+    private Cipher chiffrement = null;
     
     private KeyStore ks = null;
     
@@ -186,14 +192,18 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             tickmap msghandshake = new tickmap(TICKMAPTYPE.HANDSHAKE);
             // Chargement du keystore
             ks = KeystoreAccess();
-            SecretKey secretKey = null;
-            PrivateKey clePriv = null;
-            PublicKey clePub = null;
             try {
-                clePriv = (PrivateKey)ks.getKey("client","ggbrogg".toCharArray());
+                KeyGenerator keyGen = KeyGenerator.getInstance("DES");
+                keyGen.init(new SecureRandom());
+                keySecret = keyGen.generateKey();
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                keyCli = (PrivateKey)ks.getKey("client","ggbrogg".toCharArray());
                 System.out.println("Cle privee recuperee");
-                clePub = (PublicKey)ks.getKey("server","ggbrogg".toCharArray());
-                System.out.println("Cle publique recuperee");
+                keyServ = (PublicKey)ks.getKey("server","ggbrogg".toCharArray());
+                System.out.println("Cle publique recuperee");          
             } catch (KeyStoreException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NoSuchAlgorithmException ex) {
@@ -201,9 +211,28 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             } catch (UnrecoverableKeyException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
+            try {
+                chiffrement = Cipher.getInstance("DES/ECB/PKCS5Padding");
+                chiffrement.init(Cipher.ENCRYPT_MODE, keyServ);
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NoSuchPaddingException ex) {
+                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvalidKeyException ex) {        
+                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
+            }
             System.out.println("Creation message");
             
-            
+            byte[] bytesMsg = keySecret.getEncoded();
+            try {
+                byte[] msgCrypt = chiffrement.doFinal(bytesMsg);
+                msg = new String(msgCrypt);
+            } catch (IllegalBlockSizeException ex) {
+                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (BadPaddingException ex) {
+                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
             msghandshake.setMessage(msg);
             System.out.println("Envoi du message");
             
