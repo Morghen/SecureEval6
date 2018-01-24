@@ -6,6 +6,7 @@
 package applicationbillet;
 
 import Data.Vols;
+import java.awt.Frame;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
@@ -20,7 +21,7 @@ import protocole.tickmap;
 public class AchatBillet extends javax.swing.JDialog {
 
     public TickmapClient tc=null;
-    
+    public Frame parentFrame =null;
     public Vols v=null;
     
     /**
@@ -29,6 +30,7 @@ public class AchatBillet extends javax.swing.JDialog {
     public AchatBillet(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        parentFrame = parent;
     }
     
     public AchatBillet(java.awt.Frame parent, boolean modal, Vols pv,TickmapClient ptc) {
@@ -131,7 +133,7 @@ public class AchatBillet extends javax.swing.JDialog {
             if(response.getType() == TICKMAPTYPE.NOK){
                 JOptionPane.showMessageDialog(this,"ERREUR D'ACHAT", "title", JOptionPane.INFORMATION_MESSAGE);
             }else{
-                this.dispose();
+                ConfirmationAchat ca = new ConfirmationAchat(this.parentFrame,true,response.getMessage(), tc);
             }
         }else{
             JOptionPane.showMessageDialog(this,"Veuillez acheter plus que 0 billet", "title", JOptionPane.INFORMATION_MESSAGE);

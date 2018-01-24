@@ -5,18 +5,33 @@
  */
 package applicationbillet;
 
+import Data.Vols;
+import com.sun.corba.se.impl.logging.OMGSystemException;
+import libs.TickmapClient;
+import protocole.TICKMAPTYPE;
+import protocole.tickmap;
+
 /**
  *
  * @author 'Toine
  */
 public class ConfirmationAchat extends javax.swing.JDialog {
 
+    String info = "";
+    public TickmapClient tc = null;
     /**
      * Creates new form ConfirmationAchat
      */
     public ConfirmationAchat(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+    }
+    
+    public ConfirmationAchat(java.awt.Frame parent, boolean modal, String info, TickmapClient ptc) {
+        super(parent, modal);
+        initComponents();
+        infoLabel.setText(info);
+        tc = ptc;
     }
 
     /**
@@ -28,21 +43,72 @@ public class ConfirmationAchat extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        infoLabel = new javax.swing.JLabel();
+        confirmButton = new javax.swing.JButton();
+        annulerButton = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        infoLabel.setText("jLabel1");
+
+        confirmButton.setText("Confirmer");
+        confirmButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                confirmButtonMouseClicked(evt);
+            }
+        });
+
+        annulerButton.setText("Annuler");
+        annulerButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                annulerButtonMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 691, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(75, 75, 75)
+                        .addComponent(infoLabel))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(confirmButton)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 264, Short.MAX_VALUE)
+                .addComponent(annulerButton)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 464, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(58, 58, 58)
+                .addComponent(infoLabel)
+                .addGap(111, 111, 111)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(confirmButton)
+                    .addComponent(annulerButton))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void annulerButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_annulerButtonMouseClicked
+        // TODO add your handling code here:
+       tc.write(new tickmap(TICKMAPTYPE.NOTCONFIRM,""));
+       tc.read();
+       this.dispose();
+    }//GEN-LAST:event_annulerButtonMouseClicked
+
+    private void confirmButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmButtonMouseClicked
+        // TODO add your handling code here:
+        tc.write(new tickmap(TICKMAPTYPE.CONFIRMATION,""));
+        tc.read();
+        this.dispose();
+    }//GEN-LAST:event_confirmButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -87,5 +153,8 @@ public class ConfirmationAchat extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton annulerButton;
+    private javax.swing.JButton confirmButton;
+    private javax.swing.JLabel infoLabel;
     // End of variables declaration//GEN-END:variables
 }

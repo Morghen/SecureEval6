@@ -55,11 +55,14 @@ public class ClientThread extends Thread{
         running = true;
         while(running){
             tc = tl.getTMClient();
+            int prixVols = 100;
             if(tc != null){
                 //on a un client donc on peut excecuter ici les fcts
                 pere.Trace("ThCli: on a un nouveau client");
                 boolean connect = true;
                 int idClient = 0;
+                int idVols = 0;
+                int nbrBillet=0;
                 while(connect ){
                     int taille = 0;
                     byte[] tmp = null;
@@ -157,27 +160,20 @@ public class ClientThread extends Thread{
                         case ACHAT:
                             try {
                                 strTok = new StringTokenizer(msg.getMessage(),"#");
-                                int idVols = Integer.parseInt(strTok.nextToken());
-                                int nbrBillet = Integer.parseInt(strTok.nextToken());
+                                idVols = Integer.parseInt(strTok.nextToken());
+                                nbrBillet = Integer.parseInt(strTok.nextToken());
 
-                                    rs = uti.query("SELECT * FROM vols WHERE idVols = "+idVols);
-                                    rs.next();
-
+                                rs = uti.query("SELECT * FROM vols WHERE idVols = "+idVols);
+                                rs.next();
+                                
                                 Vols v = new Vols(rs);
                                 if(v.getNbrDispo() < nbrBillet){
                                     msgToSend = new tickmap(TICKMAPTYPE.NOK, "pas assez de billet dispo");
                                 }else{
-                                    int idTicket = 1;
-                                    rs = uti.query("SELECT max(idTicket) from ticket");
-                                    if(rs.next())
-                                        idTicket = rs.getInt(1);
-                                    else
-                                        idTicket = 1;
-                                    uti.update("UPDATE vols SET nbrDispo = nbrDispo-"+nbrBillet+" WHERE idVols = "+idVols);
-                                    for(int j=0; j<nbrBillet;j++)
-                                    {
-                                        uti.update("INSERT INTO ticket(idTicket, idClient, idVols, payer) VALUES("+ ++idTicket +","+idClient+","+idVols+",'N')");
-                                    }
+                                    int place = v.getNbrBillet() - v.getNbrDispo();
+                                    int placeFin = place + nbrBillet;
+                                    int prix = nbrBillet * prixVols;
+                                    String str = "billet pris place de "+place+" jusque "+placeFin+" pour un prix de "+prix;
                                     msgToSend = new tickmap(TICKMAPTYPE.OK, "billet pris");
                                 }
                             } catch (SQLException ex) {
@@ -186,7 +182,31 @@ public class ClientThread extends Thread{
                             }
                             break;
                         case CONFIRMATION:
+                            try {
+                                
+                                int idTicket = 1;
+                                rs = uti.query("SELECT max(idTicket) from ticket");
+                                if(rs.next())
+                                    idTicket = rs.getInt(1);
+                                else
+                                    idTicket = 1;
+                                uti.update("UPDATE vols SET nbrDispo = nbrDispo-"+nbrBillet+" WHERE idVols = "+idVols);
+                                for(int j=0; j<nbrBillet;j++)
+                                {
+                                    uti.update("INSERT INTO ticket(idTicket, idClient, idVols, payer) VALUES("+ ++idTicket +","+idClient+","+idVols+",'N')");
+                                }
+                                msgToSend.setType(TICKMAPTYPE.OK);
+                            } catch (SQLException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                                msgToSend.setMessage(ex.getMessage());
+                            }
                             break;
+                        case NOTCONFIRM:
+                            idVols=0;
+                            nbrBillet=0;
+                            break;
+                        default:
+                            
                     }
                     pere.Trace("ThCli envois : "+msgToSend.toString());
                     tc.write(msgToSend);
