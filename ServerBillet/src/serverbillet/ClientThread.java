@@ -59,8 +59,8 @@ public class ClientThread extends Thread{
                 //on a un client donc on peut excecuter ici les fcts
                 pere.Trace("ThCli: on a un nouveau client");
                 boolean connect = true;
+                int idClient = 0;
                 while(connect ){
-                    int idClient = 0;
                     int taille = 0;
                     byte[] tmp = null;
                     tickmap msg = tc.read();
@@ -124,6 +124,7 @@ public class ClientThread extends Thread{
                             }
                             break;
                         case DISCONECT:
+                            idClient =0;
                             connect = false;
                             break;
                         case GETLISTVOL:

@@ -130,6 +130,8 @@ public class AchatBillet extends javax.swing.JDialog {
             tickmap response = tc.read();
             if(response.getType() == TICKMAPTYPE.NOK){
                 JOptionPane.showMessageDialog(this,"ERREUR D'ACHAT", "title", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                this.dispose();
             }
         }else{
             JOptionPane.showMessageDialog(this,"Veuillez acheter plus que 0 billet", "title", JOptionPane.INFORMATION_MESSAGE);
