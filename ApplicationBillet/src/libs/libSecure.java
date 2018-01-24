@@ -36,10 +36,10 @@ public class libSecure {
         } catch (KeyStoreException ex) {
             System.out.println("Erreur de keystore : "+ex);
         }
-        char[] keyStorePassword = "testcle1234".toCharArray();
+        char[] keyStorePassword = "test1234".toCharArray();
         try
         {
-            InputStream ksis = new FileInputStream("../keystore.ks");
+            InputStream ksis = new FileInputStream("keystore.ks");
             if(ksis != null)
                 ks.load(ksis, keyStorePassword);
             else
@@ -101,8 +101,8 @@ public class libSecure {
         
         try
         {
-            keyStorePassword = "testcle1234".toCharArray();
-            FileOutputStream fos = new FileOutputStream("../keystore.ks");  
+            keyStorePassword = "test1234".toCharArray();
+            FileOutputStream fos = new FileOutputStream("keystore.ks");  
             ks.store(fos,keyStorePassword);
             fos.close();
         }
