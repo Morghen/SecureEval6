@@ -10,6 +10,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
@@ -27,6 +28,8 @@ import protocole.tickmap;
 public class ApplicationBilletLogin extends javax.swing.JFrame {
     
     public TickmapClient tc = null;
+    
+    private KeyStore ks = null;
     
     public boolean connected = false;
     
@@ -162,7 +165,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             System.out.println("Connecter OK");
             System.out.println("Debut handshake");
             tickmap msghandshake = new tickmap(TICKMAPTYPE.HANDSHAKE);
-            KeystoreAccess();
+            ks = KeystoreAccess();
             
         }else{
             connected = false;
