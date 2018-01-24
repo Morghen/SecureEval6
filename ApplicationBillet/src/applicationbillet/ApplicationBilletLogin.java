@@ -32,6 +32,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import libs.TickmapClient;
 import static libs.libSecure.KeystoreAccess;
 import org.bouncycastle.util.encoders.Base64Encoder;
@@ -185,12 +186,13 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             tickmap msghandshake = new tickmap(TICKMAPTYPE.HANDSHAKE);
             // Chargement du keystore
             ks = KeystoreAccess();
+            SecretKey secretKey = null;
             PrivateKey clePriv = null;
             PublicKey clePub = null;
             try {
                 clePriv = (PrivateKey)ks.getKey("client","ggbrogg".toCharArray());
                 System.out.println("Cle privee recuperee");
-                clePub = (PublicKey)ks.getKey("client","ggbrogg".toCharArray());
+                clePub = (PublicKey)ks.getKey("server","ggbrogg".toCharArray());
                 System.out.println("Cle publique recuperee");
             } catch (KeyStoreException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -200,39 +202,8 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
             System.out.println("Creation message");
-            byte[] message = clePub.getEncoded();
-            BASE64Encoder encoder = new BASE64Encoder();
-            String Message = encoder.encode(message);
-            System.out.println("Instanciation de la signature");
-            Signature s = null;
-            try {
-                s = Signature.getInstance("SHA1withRSA");
-            } catch (NoSuchAlgorithmException ex) {
-                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            System.out.println("Init cle privee");
-            try {
-                s.initSign(clePriv);
-            } catch (InvalidKeyException ex) {
-                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            System.out.println("Hachage message");
-            try {
-                s.update(message);
-            } catch (SignatureException ex) {
-                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            System.out.println("Generation bytes");
-            byte[] signature = null;
-            try {
-                signature = s.sign();
-            } catch (SignatureException ex) {
-                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            System.out.println("Signature construite");
             
-            msg = Message + "#" + new String(signature);
- 
+            
             msghandshake.setMessage(msg);
             System.out.println("Envoi du message");
             
