@@ -10,6 +10,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
@@ -23,6 +24,10 @@ import java.security.UnrecoverableKeyException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import libs.TickmapClient;
 import static libs.libSecure.KeystoreAccess;
 import protocole.TICKMAPTYPE;
@@ -175,9 +180,13 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             // Chargement du keystore
             ks = KeystoreAccess();
             PrivateKey clePriv = null;
+            PublicKey clePub = null;
+            Cipher chiffrage = null;      
             try {
                 clePriv = (PrivateKey)ks.getKey("client","ggbrogg".toCharArray());
                 System.out.println("Cle privee recuperee");
+                clePub = (PublicKey)ks.getKey("client","ggbrogg".toCharArray());
+                System.out.println("Cle publique recuperee");
             } catch (KeyStoreException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NoSuchAlgorithmException ex) {
@@ -185,6 +194,35 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             } catch (UnrecoverableKeyException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
+            try {
+                chiffrage = Cipher.getInstance("DES/ECB/PKCS5Padding");
+                System.out.println("Chiffrage de la cle publique");
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NoSuchPaddingException ex) {
+                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                chiffrage.init(Cipher.ENCRYPT_MODE, clePriv);
+            } catch (InvalidKeyException ex) {
+                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            byte[] texteClair = clePub.toString().getBytes();
+            try {
+                msgD = chiffrage.doFinal(texteClair);
+                System.out.println("Cle chiffree");
+            } catch (IllegalBlockSizeException ex) {
+                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (BadPaddingException ex) {
+                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            msg = new String(msgD);
+            msghandshake.setMessage(msg);
+            System.out.println("Envoi du message");
+            
+            tc.write(msghandshake);
+            
+            response = tc.read();
             
             
             
