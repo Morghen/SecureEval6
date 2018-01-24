@@ -174,7 +174,7 @@ public class ClientThread extends Thread{
                                     int placeFin = place + nbrBillet;
                                     int prix = nbrBillet * prixVols;
                                     String str = "billet pris place de "+place+" jusque "+placeFin+" pour un prix de "+prix;
-                                    msgToSend = new tickmap(TICKMAPTYPE.OK, "billet pris");
+                                    msgToSend = new tickmap(TICKMAPTYPE.OK, str);
                                 }
                             } catch (SQLException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);

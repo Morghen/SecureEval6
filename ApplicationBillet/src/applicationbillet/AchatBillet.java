@@ -134,6 +134,7 @@ public class AchatBillet extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(this,"ERREUR D'ACHAT", "title", JOptionPane.INFORMATION_MESSAGE);
             }else{
                 ConfirmationAchat ca = new ConfirmationAchat(this.parentFrame,true,response.getMessage(), tc);
+                ca.setVisible(true);
             }
         }else{
             JOptionPane.showMessageDialog(this,"Veuillez acheter plus que 0 billet", "title", JOptionPane.INFORMATION_MESSAGE);

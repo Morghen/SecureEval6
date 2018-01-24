@@ -98,14 +98,14 @@ public class ConfirmationAchat extends javax.swing.JDialog {
 
     private void annulerButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_annulerButtonMouseClicked
         // TODO add your handling code here:
-       tc.write(new tickmap(TICKMAPTYPE.NOTCONFIRM,""));
+       tc.write(new tickmap(TICKMAPTYPE.NOTCONFIRM,"NOK"));
        tc.read();
        this.dispose();
     }//GEN-LAST:event_annulerButtonMouseClicked
 
     private void confirmButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmButtonMouseClicked
         // TODO add your handling code here:
-        tc.write(new tickmap(TICKMAPTYPE.CONFIRMATION,""));
+        tc.write(new tickmap(TICKMAPTYPE.CONFIRMATION,"OK"));
         tc.read();
         this.dispose();
     }//GEN-LAST:event_confirmButtonMouseClicked
