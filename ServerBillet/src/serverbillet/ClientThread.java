@@ -70,7 +70,10 @@ public class ClientThread extends Thread{
                     StringTokenizer strTok=null;
                     //traitement du msg
                     //c'est ici qu'on va faire les fonctions du protocol !
-                    pere.Trace("ThCli reception "+msg.toString());
+                    if(idClient != 0)
+                        pere.Trace("ThCli recv "+idClient+" - "+msg.toString());
+                    else
+                        pere.Trace("ThCli recv - "+msg.toString());
                     switch(msg.getType()){
                         case CONNECT:
                             strTok = new StringTokenizer(msg.getMessage(), "#");
@@ -166,7 +169,7 @@ public class ClientThread extends Thread{
                                     int idTicket = 1;
                                     rs = uti.query("SELECT max(idTicket) from ticket");
                                     if(rs.next())
-                                        idTicket = Integer.parseInt(rs.getObject(1).toString());
+                                        idTicket = rs.getInt(1);
                                     else
                                         idTicket = 1;
                                     uti.update("UPDATE vols SET nbrDispo = nbrDispo-"+nbrBillet+" WHERE idVols = "+idVols);
@@ -178,6 +181,7 @@ public class ClientThread extends Thread{
                                 }
                             } catch (SQLException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                                msgToSend.setMessage(ex.getMessage());
                             }
                             break;
                         case CONFIRMATION:
