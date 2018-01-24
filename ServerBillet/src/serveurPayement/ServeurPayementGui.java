@@ -14,11 +14,15 @@ import libs.Tracable;
  */
 public class ServeurPayementGui extends javax.swing.JFrame implements Tracable{
 
+    serveurPayement sp = null;
+    
     /**
      * Creates new form ServeurPayementGui
      */
     public ServeurPayementGui() {
         initComponents();
+        sp = new serveurPayement(this);
+        
     }
 
     /**
@@ -86,10 +90,12 @@ public class ServeurPayementGui extends javax.swing.JFrame implements Tracable{
 
     private void demarerButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_demarerButtonMouseClicked
         // TODO add your handling code here:
+        sp.start();
     }//GEN-LAST:event_demarerButtonMouseClicked
 
     private void endButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_endButtonMouseClicked
         // TODO add your handling code here:
+        sp.doStop();
     }//GEN-LAST:event_endButtonMouseClicked
 
     /**
