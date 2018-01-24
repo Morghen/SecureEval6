@@ -12,6 +12,7 @@ import static java.sql.ResultSet.CONCUR_READ_ONLY;
 import static java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 
 
 /**
@@ -38,6 +39,20 @@ public class BDUtilities {
         tmpCon = "jdbc:" + "mysql://"+ip+":"+port+"/bd_airport";
         con = DriverManager.getConnection(tmpCon, login, motdepasse);
         instruc =  con.createStatement(TYPE_SCROLL_INSENSITIVE, CONCUR_READ_ONLY);
+    }
+    
+    public void log(String msg) throws SQLException{
+        int idLog=0;
+        Date date = new Date();
+        try{
+            ResultSet rs = query("SELECT max(idLog) FROM log");
+            rs.next();
+            idLog = rs.getInt(1);
+        }catch(Exception e){
+            idLog =0;
+        }
+        String update = "INSERT INTO log(idLog, msg, date) VALUES("+idLog+","+msg+","+date+")";
+        update(update);
     }
     
     public ResultSet query(String pquery) throws SQLException
