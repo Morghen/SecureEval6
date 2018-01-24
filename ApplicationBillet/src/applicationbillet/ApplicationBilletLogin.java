@@ -202,8 +202,8 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             try {
                 keyCli = (PrivateKey)ks.getKey("client","ggbrogg".toCharArray());
                 System.out.println("Cle privee recuperee");
-                keyServ = (PublicKey)ks.getKey("server","ggbrogg".toCharArray());
-                System.out.println("Cle publique recuperee");          
+                Certificate certifServ = ks.getCertificate("server");
+                keyServ = certifServ.getPublicKey();
             } catch (KeyStoreException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NoSuchAlgorithmException ex) {

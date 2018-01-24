@@ -11,6 +11,7 @@ import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -18,9 +19,11 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
@@ -31,6 +34,12 @@ import java.util.LinkedList;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import libs.BDUtilities;
 import libs.TickmapClient;
 import libs.TickmapList;
@@ -147,11 +156,39 @@ public class ClientThread extends Thread{
                             break;
                         case HANDSHAKE:
                             ks = KeystoreAccess();
-                       
+                            PrivateKey myKey = null;
+                            Cipher decryptage = null;
+                            try {
+                                myKey = (PrivateKey)ks.getKey("server","ggbrogg".toCharArray());
+                            } catch (KeyStoreException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (NoSuchAlgorithmException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (UnrecoverableKeyException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            try {
+                                decryptage = Cipher.getInstance("DES/ECB/PKCS5Padding");
+                                decryptage.init(Cipher.DECRYPT_MODE, myKey);
+                            } catch (NoSuchAlgorithmException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (NoSuchPaddingException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (InvalidKeyException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                             
-
-                            
-                            
+                            byte[] msgCrypt = msg.getMessage().getBytes();
+                            byte[] msgDecrypt = null;
+                            try {
+                                msgDecrypt = decryptage.doFinal(msgCrypt);
+                            } catch (IllegalBlockSizeException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (BadPaddingException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }                          
+                            SecretKey cleSecrete = new SecretKeySpec(msgDecrypt,0,msgDecrypt.length,"DES");
+                                     
                         case GETLISTVOL:
                             lv = new LinkedList<>();
                             rs=null;
@@ -266,5 +303,36 @@ public class ClientThread extends Thread{
     
     public void DoStop(){
         running = false;
+    }
+
+    private KeyStore KeystoreAccess() {
+        KeyStore ks = null;
+        try {
+            ks = KeyStore.getInstance("JKS");
+        } catch (KeyStoreException ex) {
+            System.out.println("Erreur de keystore : "+ex);
+        }
+        char[] keyStorePassword = "test1234".toCharArray();
+        try
+        {
+            InputStream ksis = new FileInputStream("..\\keystore.jks");
+            ks.load(ksis, keyStorePassword);
+        }
+        catch(IOException ex)
+        {
+            System.out.println("Erreur d'ouverture du keystore : "+ex);
+        }
+        catch(NoSuchAlgorithmException ex)
+        {
+            System.out.println("Erreur d'algorithme sur keystore : "+ex);
+            System.exit(-1);
+        }
+        catch(CertificateException ex)
+        {
+            System.out.println("Erreur de certificats : "+ex);
+            System.exit(-1);
+        }
+        
+        return ks;
     }
 }
