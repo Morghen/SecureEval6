@@ -10,9 +10,14 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -165,7 +170,23 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             System.out.println("Connecter OK");
             System.out.println("Debut handshake");
             tickmap msghandshake = new tickmap(TICKMAPTYPE.HANDSHAKE);
+            // Chargement du keystore
             ks = KeystoreAccess();
+            KeyPairGenerator RSACles = null;
+            SecureRandom rng = null;
+            try {
+                // Generation de la paire de clé
+                RSACles = KeyPairGenerator.getInstance("RSA");
+                rng = new SecureRandom();
+            } catch (NoSuchAlgorithmException ex) {
+                System.out.println("Erreur de generation de la paire de cle : "+ex);
+            }
+            RSACles.initialize(512, rng);
+            KeyPair deuxCles = RSACles.generateKeyPair();
+            PublicKey pubKey = deuxCles.getPublic();
+            PrivateKey privKey = deuxCles.getPrivate();
+            
+            
             
         }else{
             connected = false;
