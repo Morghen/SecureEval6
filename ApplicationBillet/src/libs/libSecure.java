@@ -32,7 +32,7 @@ public class libSecure {
     public static KeyStore KeystoreAccess() {
         KeyStore ks = null;
         try {
-            ks = KeyStore.getInstance(KeyStore.getDefaultType());
+            ks = KeyStore.getInstance("JKS");
         } catch (KeyStoreException ex) {
             System.out.println("Erreur de keystore : "+ex);
         }

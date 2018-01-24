@@ -8,10 +8,20 @@ package serverbillet;
 import Data.Vols;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.security.KeyFactory;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -25,6 +35,7 @@ import libs.Tracable;
 import org.bouncycastle.util.encoders.Base64;
 import protocole.TICKMAPTYPE;
 import protocole.tickmap;
+import sun.misc.BASE64Decoder;
 
 /**
  *
@@ -37,6 +48,7 @@ public class ClientThread extends Thread{
     private boolean running = false;
     private Tracable pere = null;
     private BDUtilities uti=null;
+    private KeyStore ks = null;
 
     public ClientThread(TickmapList ptc, Tracable t) {
         tl = ptc;
@@ -130,6 +142,66 @@ public class ClientThread extends Thread{
                             idClient =0;
                             connect = false;
                             break;
+                        case HANDSHAKE:
+                            strTok = new StringTokenizer(msg.getMessage(), "#");
+                            PublicKey clePubClient = null;
+                            // Ouverture du keystore
+                            try {
+                                ks = KeyStore.getInstance("JKS");
+                                ks.load(new FileInputStream("..\\keystore_serv.jks"),"1234test".toCharArray());
+                                pere.Trace("Ouverture keystore");
+                            } catch (KeyStoreException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (FileNotFoundException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (IOException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (NoSuchAlgorithmException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (CertificateException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            // Decodage de la str en publickey
+                            String Message = strTok.nextToken();
+                            BASE64Decoder decoder = new BASE64Decoder();                
+                            try {
+                                byte[] publicKBytes = decoder.decodeBuffer(Message);
+                                X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(publicKBytes);
+                                KeyFactory keyFact = KeyFactory.getInstance("RSA");
+                                clePubClient = keyFact.generatePublic(x509KeySpec);
+
+                            } catch (IOException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (NoSuchAlgorithmException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (InvalidKeySpecException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            // Recuperation de la signature
+                            String signatureCliStr = strTok.nextToken();
+                            byte[] sigCli = signatureCliStr.getBytes();
+                            // Recuperation de la cle publique du certificat
+                            pere.Trace("Recuperation certificat");
+                            X509Certificate certif = null;
+                            try {
+                                certif = (X509Certificate)ks.getCertificate("client");
+                            } catch (KeyStoreException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            pere.Trace("Recuperation de la cle publique");
+                            PublicKey cleCertif = certif.getPublicKey();
+                            pere.Trace("Cle publique recuperee");
+                            pere.Trace("Verification signature");
+                            
+                         
+                    
+                            
+                            
+                            
+                            
+                            
+                            
+                            
                         case GETLISTVOL:
                             lv = new LinkedList<>();
                             rs=null;

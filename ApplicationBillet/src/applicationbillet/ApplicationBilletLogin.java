@@ -24,6 +24,7 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
+import java.util.Base64.Encoder;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,8 +34,10 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import libs.TickmapClient;
 import static libs.libSecure.KeystoreAccess;
+import org.bouncycastle.util.encoders.Base64Encoder;
 import protocole.TICKMAPTYPE;
 import protocole.tickmap;
+import sun.misc.BASE64Encoder;
 
 /**
  *
@@ -197,8 +200,9 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
             System.out.println("Creation message");
-            String Message = clePub.toString();
-            byte[] message = Message.getBytes();
+            byte[] message = clePub.getEncoded();
+            BASE64Encoder encoder = new BASE64Encoder();
+            String Message = encoder.encode(message);
             System.out.println("Instanciation de la signature");
             Signature s = null;
             try {
