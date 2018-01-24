@@ -235,10 +235,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             tc.write(msghandshake);
             
             response = tc.read();
-            
-            
-            
-            
+                       
         }
         else{
             connected = false;

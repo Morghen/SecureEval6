@@ -39,7 +39,7 @@ public class libSecure {
         char[] keyStorePassword = "test1234".toCharArray();
         try
         {
-            InputStream ksis = new FileInputStream("keystore_cli.jks");
+            InputStream ksis = new FileInputStream("..\\keystore_cli.jks");
             ks.load(ksis, keyStorePassword);
         }
         catch(IOException ex)
@@ -99,7 +99,7 @@ public class libSecure {
         try
         {
             keyStorePassword = "test1234".toCharArray();
-            FileOutputStream fos = new FileOutputStream("keystore.ks");  
+            FileOutputStream fos = new FileOutputStream("..\\keystore.ks");  
             ks.store(fos,keyStorePassword);
             fos.close();
         }
