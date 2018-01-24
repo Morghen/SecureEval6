@@ -8,6 +8,7 @@ package libs;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -27,7 +28,7 @@ public class libSecure {
         
     }
     
-    public static void Handshake_Cli() {
+    public static void KeystoreAccess() {
         
         try {
             ks = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -38,11 +39,14 @@ public class libSecure {
         try
         {
             InputStream ksis = new FileInputStream("keystore.ks");
-            ks.load(ksis, keyStorePassword);
+            if(ksis != null)
+                ks.load(ksis, keyStorePassword);
+            else
+                ks.load(null, keyStorePassword);
         }
         catch(IOException ex)
         {
-            System.out.println("Erreur d'ouverture du keystore : "+ex);           
+            System.out.println("Erreur d'ouverture du keystore : "+ex);
         }
         catch(NoSuchAlgorithmException ex)
         {
@@ -56,5 +60,16 @@ public class libSecure {
         }
     }
     
+    public void setKey()
+    {
+        
+    }
     
+    public Key getKey()
+    {
+        Key tmp = null;
+        
+        
+        return tmp;
+    }
 }

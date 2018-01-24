@@ -16,8 +16,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import libs.TickmapClient;
-import libs.libSecure;
-import static libs.libSecure.Handshake_Cli;
+import static libs.libSecure.KeystoreAccess;
 import protocole.TICKMAPTYPE;
 import protocole.tickmap;
 
@@ -163,7 +162,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             System.out.println("Connecter OK");
             System.out.println("Debut handshake");
             tickmap msghandshake = new tickmap(TICKMAPTYPE.HANDSHAKE);
-            Handshake_Cli();
+            KeystoreAccess();
             
         }else{
             connected = false;
