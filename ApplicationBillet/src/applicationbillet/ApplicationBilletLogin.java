@@ -227,7 +227,8 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             
             
             
-        }else{
+        }
+        else{
             connected = false;
             System.out.println("Connecter FAILED");
         }
