@@ -39,11 +39,8 @@ public class libSecure {
         char[] keyStorePassword = "test1234".toCharArray();
         try
         {
-            InputStream ksis = new FileInputStream("keystore.ks");
-            if(ksis != null)
-                ks.load(ksis, keyStorePassword);
-            else
-                ks.load(null, keyStorePassword);
+            InputStream ksis = new FileInputStream("keystore_cli.jks");
+            ks.load(ksis, keyStorePassword);
         }
         catch(IOException ex)
         {
