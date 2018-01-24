@@ -159,6 +159,8 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         if(response.getType() == TICKMAPTYPE.OK){
             connected = true;
             System.out.println("Connecter OK");
+            System.out.println("Handshake -> envoi HMAC");
+            
         }else{
             connected = false;
             System.out.println("Connecter FAILED");
