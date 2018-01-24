@@ -63,7 +63,7 @@ public class libSecure {
         return ks;
     }
     
-    public void setKey(String alias,KeyStore ks,SecretKey sk,String mdp)
+    public void setSKey(String alias,KeyStore ks,SecretKey sk,String mdp)
     {
         KeyStore.SecretKeyEntry ske = new KeyStore.SecretKeyEntry(sk);
         KeyStore.ProtectionParameter entryPass = new KeyStore.PasswordProtection(mdp.toCharArray());
