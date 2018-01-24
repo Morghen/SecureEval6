@@ -12,12 +12,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
@@ -169,7 +172,6 @@ public class ClientThread extends Thread{
                                 X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(publicKBytes);
                                 KeyFactory keyFact = KeyFactory.getInstance("RSA");
                                 clePubClient = keyFact.generatePublic(x509KeySpec);
-
                             } catch (IOException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (NoSuchAlgorithmException ex) {
@@ -192,14 +194,33 @@ public class ClientThread extends Thread{
                             PublicKey cleCertif = certif.getPublicKey();
                             pere.Trace("Cle publique recuperee");
                             pere.Trace("Verification signature");
-                            
-                         
-                    
-                            
-                            
-                            
-                            
-                            
+                            Signature sv = null;
+                            try {
+                                sv = Signature.getInstance("SHA1WithRSA");
+                            } catch (NoSuchAlgorithmException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            try {
+                                sv.initVerify(cleCertif);
+                            } catch (InvalidKeyException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            pere.Trace("Hachage message");
+                            try {
+                                sv.update(Message.getBytes());
+                            } catch (SignatureException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            try {
+                                boolean ok = sv.verify(sigCli);
+                                if(ok)
+                                    pere.Trace("Signature verifiee");
+                                else
+                                    pere.Trace("Signature inconnue !");
+                            } catch (SignatureException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
                             
                             
                         case GETLISTVOL:
