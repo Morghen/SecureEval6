@@ -201,6 +201,31 @@ public class ClientThread extends Thread{
                                 msgToSend.setMessage(ex.getMessage());
                             }
                             break;
+                        case PAYEMENT:
+                            strTok = new StringTokenizer(msg.getMessage(),"#");
+                            idVols = Integer.parseInt(strTok.nextToken());
+                            idClient = Integer.parseInt(strTok.nextToken());
+                            try {
+                                uti.update("UPDATE ticket SET payer = \"Y\" WHERE idClient = "+idClient+" AND idVols = "+idVols);
+                            } catch (SQLException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            break;
+                        case NOTPAYEMENT:
+                            strTok = new StringTokenizer(msg.getMessage(),"#");
+                            idVols = Integer.parseInt(strTok.nextToken());
+                            idClient = Integer.parseInt(strTok.nextToken());
+                            int nbrBillet1 = 0;
+                            try {
+                                rs = uti.query("SELECT count(*) FROM ticket WHERE idClient = "+idClient+" AND idVols = "+idVols+" AND payer like 'N'");
+                                rs.next();
+                                nbrBillet = rs.getInt(1);
+                                uti.update("DELETE FROM ticket WHERE idClient = "+idClient+" AND idVols = "+idVols+" AND payer like 'N'");
+                                uti.update("UPDATE vols SET nbrDispo = nbrDispo-"+nbrBillet1+" WHERE idVols = "+idVols);
+                            } catch (SQLException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            break;
                         case NOTCONFIRM:
                             idVols=0;
                             nbrBillet=0;

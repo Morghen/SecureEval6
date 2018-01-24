@@ -17,8 +17,11 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import libs.BDUtilities;
+import libs.PaypClient;
 import libs.TickmapClient;
 import libs.Tracable;
+import protocole.TICKMAPTYPE;
+import protocole.payp;
 import protocole.tickmap;
 
 /**
@@ -30,8 +33,9 @@ public class serveurPayement extends Thread{
     private boolean Running = false;
     private ServerSocket SSocket;
     private Tracable pere = null;
-    public TickmapClient tc =null;
+    public PaypClient pc =null;
     public BDUtilities uti=null;
+    public TickmapClient tc =null;
     
     public serveurPayement(Tracable zonetxt) {
         SSocket = null;
@@ -47,6 +51,7 @@ public class serveurPayement extends Thread{
         {
             SSocket = new ServerSocket(Port);
             
+            tc = new TickmapClient(new Socket("localhost", 9025));
         }
         catch(IOException e)
         {
@@ -62,10 +67,10 @@ public class serveurPayement extends Thread{
             pere.Trace("ThServ : Serveur en attente");
             try
             {
-                tc = new TickmapClient(SSocket.accept());
+                pc = new PaypClient(SSocket.accept());
                 pere.Trace("ThServ :Serveur a recu la connexion");
                 
-                tickmap request = tc.read();
+                payp request = pc.read();
                 int idVols = 0;
                 int idClient =0;
                 StringTokenizer strTok;
@@ -76,18 +81,13 @@ public class serveurPayement extends Thread{
                             strTok = new StringTokenizer(request.getMessage(),"#");
                             idVols = Integer.parseInt(strTok.nextToken());
                             idClient = Integer.parseInt(strTok.nextToken());
-                            uti.update("UPDATE ticket SET payer = \"Y\" WHERE idClient = "+idClient+" AND idVols = "+idVols);
+                            tc.write(new tickmap(TICKMAPTYPE.PAYEMENT,""+idVols+"#"+idClient));
                             break;
                         case NOTPAYEMENT:
                             strTok = new StringTokenizer(request.getMessage(),"#");
                             idVols = Integer.parseInt(strTok.nextToken());
                             idClient = Integer.parseInt(strTok.nextToken());
-                            int nbrBillet = 0;
-                            ResultSet rs = uti.query("SELECT count(*) FROM ticket WHERE idClient = "+idClient+" AND idVols = "+idVols+" AND payer like 'N'");
-                            rs.next();
-                            nbrBillet = rs.getInt(1);
-                            uti.update("DELETE FROM ticket WHERE idClient = "+idClient+" AND idVols = "+idVols+" AND payer like 'N'");
-                            uti.update("UPDATE vols SET nbrDispo = nbrDispo-"+nbrBillet+" WHERE idVols = "+idVols);
+                            tc.write(new tickmap(TICKMAPTYPE.NOTPAYEMENT,""+idVols+"#"+idClient));
                             break;
                     }
                 }
@@ -99,8 +99,6 @@ public class serveurPayement extends Thread{
             catch(IOException e)
             {
                 pere.Trace("ThServ : Erreur accept : "+e);
-            } catch (SQLException ex) {
-                Logger.getLogger(serveurPayement.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
