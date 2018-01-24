@@ -59,26 +59,34 @@ public class ClientThread extends Thread{
                 //on a un client donc on peut excecuter ici les fcts
                 pere.Trace("ThCli: on a un nouveau client");
                 boolean connect = true;
+                int idClient = 0;
                 while(connect ){
                     int taille = 0;
                     byte[] tmp = null;
                     tickmap msg = tc.read();
                     tickmap msgToSend = new tickmap(TICKMAPTYPE.NOK);
+                    LinkedList<Vols> lv = new LinkedList<>();
+                    ResultSet rs=null;
+                    StringTokenizer strTok=null;
                     //traitement du msg
                     //c'est ici qu'on va faire les fonctions du protocol !
-                    pere.Trace("ThCli reception "+msg.toString());
+                    if(idClient != 0)
+                        pere.Trace("ThCli recv "+idClient+" - "+msg.toString());
+                    else
+                        pere.Trace("ThCli recv - "+msg.toString());
                     switch(msg.getType()){
                         case CONNECT:
-                            StringTokenizer strTok = new StringTokenizer(msg.getMessage(), "#");
+                            strTok = new StringTokenizer(msg.getMessage(), "#");
                             String login = strTok.nextToken();
                             long temps = Long.parseLong(strTok.nextToken());
                             double alea = Double.parseDouble(strTok.nextToken());
                             String digest = strTok.nextToken();
                             String mdp = null;
                             try {
-                                ResultSet rs = uti.query("SELECT password FROM client WHERE identifiant like '"+login+"'");
+                                rs = uti.query("SELECT idClient, password FROM client WHERE identifiant like '"+login+"'");
                                 rs.next();
-                                mdp = rs.getString(1);
+                                mdp = rs.getString("password");
+                                idClient = rs.getInt("idClient");
                             } catch (Exception ex) {
                                 //Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             }
@@ -116,11 +124,12 @@ public class ClientThread extends Thread{
                             }
                             break;
                         case DISCONECT:
+                            idClient =0;
                             connect = false;
                             break;
                         case GETLISTVOL:
-                            LinkedList<Vols> lv = new LinkedList<>();
-                            ResultSet rs=null;
+                            lv = new LinkedList<>();
+                            rs=null;
                             try {
                                 rs = uti.query("SELECT * FROM vols");
                             } catch (SQLException ex) {
@@ -146,6 +155,35 @@ public class ClientThread extends Thread{
                             
                             break;
                         case ACHAT:
+                            try {
+                                strTok = new StringTokenizer(msg.getMessage(),"#");
+                                int idVols = Integer.parseInt(strTok.nextToken());
+                                int nbrBillet = Integer.parseInt(strTok.nextToken());
+
+                                    rs = uti.query("SELECT * FROM vols WHERE idVols = "+idVols);
+                                    rs.next();
+
+                                Vols v = new Vols(rs);
+                                if(v.getNbrDispo() < nbrBillet){
+                                    msgToSend = new tickmap(TICKMAPTYPE.NOK, "pas assez de billet dispo");
+                                }else{
+                                    int idTicket = 1;
+                                    rs = uti.query("SELECT max(idTicket) from ticket");
+                                    if(rs.next())
+                                        idTicket = rs.getInt(1);
+                                    else
+                                        idTicket = 1;
+                                    uti.update("UPDATE vols SET nbrDispo = nbrDispo-"+nbrBillet+" WHERE idVols = "+idVols);
+                                    for(int j=0; j<nbrBillet;j++)
+                                    {
+                                        uti.update("INSERT INTO ticket(idTicket, idClient, idVols, payer) VALUES("+ ++idTicket +","+idClient+","+idVols+",'N')");
+                                    }
+                                    msgToSend = new tickmap(TICKMAPTYPE.OK, "billet pris");
+                                }
+                            } catch (SQLException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                                msgToSend.setMessage(ex.getMessage());
+                            }
                             break;
                         case CONFIRMATION:
                             break;

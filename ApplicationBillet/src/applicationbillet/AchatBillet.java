@@ -10,6 +10,8 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
 import libs.TickmapClient;
+import protocole.TICKMAPTYPE;
+import protocole.tickmap;
 
 /**
  *
@@ -124,7 +126,13 @@ public class AchatBillet extends javax.swing.JDialog {
     private void achatButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_achatButtonMouseClicked
         // TODO add your handling code here:
         if((int)nbrSpinner.getValue() > 0){
-            
+            tc.write(new tickmap(TICKMAPTYPE.ACHAT, ""+v.getIdVols()+"#"+(int)nbrSpinner.getValue()));
+            tickmap response = tc.read();
+            if(response.getType() == TICKMAPTYPE.NOK){
+                JOptionPane.showMessageDialog(this,"ERREUR D'ACHAT", "title", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                this.dispose();
+            }
         }else{
             JOptionPane.showMessageDialog(this,"Veuillez acheter plus que 0 billet", "title", JOptionPane.INFORMATION_MESSAGE);
         }
