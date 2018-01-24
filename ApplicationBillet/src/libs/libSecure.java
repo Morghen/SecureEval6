@@ -6,30 +6,31 @@
 package libs;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.SecretKey;
 
 /**
  *
  * @author Morghen
  */
 public class libSecure {
-    
-    private static KeyStore ks = null;
-   
+       
     public libSecure() {
         
     }
     
-    public static void KeystoreAccess() {
-        
+    public static KeyStore KeystoreAccess() {
+        KeyStore ks = null;
         try {
             ks = KeyStore.getInstance(KeyStore.getDefaultType());
         } catch (KeyStoreException ex) {
@@ -58,18 +59,67 @@ public class libSecure {
             System.out.println("Erreur de certificats : "+ex);
             System.exit(-1);
         }
+        
+        return ks;
     }
     
-    public void setKey()
+    public void setKey(String alias,KeyStore ks,SecretKey sk,String mdp)
     {
-        
+        KeyStore.SecretKeyEntry ske = new KeyStore.SecretKeyEntry(sk);
+        KeyStore.ProtectionParameter entryPass = new KeyStore.PasswordProtection(mdp.toCharArray());
+        try {
+            ks.setEntry(alias,ske,entryPass);
+        } catch (KeyStoreException ex) {
+            System.out.println("Erreur dans le set key du keystore : "+ex);
+            System.exit(-1);
+        }
     }
     
-    public Key getKey()
+    public KeyStore.Entry getKey(KeyStore ks,String alias,String mdp)
     {
-        Key tmp = null;
+        KeyStore.Entry keyEntry = null;
+        KeyStore.ProtectionParameter pass = new KeyStore.PasswordProtection(mdp.toCharArray());
+        try {
+            keyEntry = ks.getEntry(alias, pass);
+        } catch (NoSuchAlgorithmException ex) {
+            System.out.println("Erreur d'algorithme sur keystore : "+ex);
+            System.exit(-1);;
+        } catch (UnrecoverableEntryException ex) {
+            System.out.println("Erreur de recuperation de la cle : "+ex);
+            System.exit(-1);
+        } catch (KeyStoreException ex) {
+            System.out.println("Erreur dans le get key du keystore : "+ex);
+            System.exit(-1);
+        }
         
+        return keyEntry;
+    }
+    
+    public void KeystoreSave(KeyStore ks,String mdp)
+    {
+        char[] keyStorePassword = null;
         
-        return tmp;
+        try
+        {
+            keyStorePassword = "testcle1234".toCharArray();
+            FileOutputStream fos = new FileOutputStream("keystore.ks");  
+            ks.store(fos,keyStorePassword);
+        }
+        catch(IOException ex)
+        {
+            System.out.println("Erreur de creation du keystore : "+ex);
+        }
+        catch(KeyStoreException ex)
+        {
+            System.out.println("Erreur dans le saveKeystore : "+ex);
+        }
+        catch(NoSuchAlgorithmException ex)
+        {
+            System.out.println("Erreur d'algorithme dans le save keystore : "+ex);
+        }
+        catch(CertificateException ex)
+        {
+            System.out.println("Erreur de certificat dans le save keystore : "+ex);
+        }
     }
 }
