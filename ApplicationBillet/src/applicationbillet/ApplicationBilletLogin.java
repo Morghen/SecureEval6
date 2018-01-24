@@ -20,7 +20,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.Signature;
+import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -181,7 +184,6 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             ks = KeystoreAccess();
             PrivateKey clePriv = null;
             PublicKey clePub = null;
-            Cipher chiffrage = null;      
             try {
                 clePriv = (PrivateKey)ks.getKey("client","ggbrogg".toCharArray());
                 System.out.println("Cle privee recuperee");
@@ -194,29 +196,39 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             } catch (UnrecoverableKeyException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
+            System.out.println("Creation message");
+            String Message = clePub.toString();
+            byte[] message = Message.getBytes();
+            System.out.println("Instanciation de la signature");
+            Signature s = null;
             try {
-                chiffrage = Cipher.getInstance("DES/ECB/PKCS5Padding");
-                System.out.println("Chiffrage de la cle publique");
+                s = Signature.getInstance("SHA1withRSA");
             } catch (NoSuchAlgorithmException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NoSuchPaddingException ex) {
-                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
+            System.out.println("Init cle privee");
             try {
-                chiffrage.init(Cipher.ENCRYPT_MODE, clePriv);
+                s.initSign(clePriv);
             } catch (InvalidKeyException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
-            byte[] texteClair = clePub.toString().getBytes();
+            System.out.println("Hachage message");
             try {
-                msgD = chiffrage.doFinal(texteClair);
-                System.out.println("Cle chiffree");
-            } catch (IllegalBlockSizeException ex) {
-                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (BadPaddingException ex) {
+                s.update(message);
+            } catch (SignatureException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
-            msg = new String(msgD);
+            System.out.println("Generation bytes");
+            byte[] signature = null;
+            try {
+                signature = s.sign();
+            } catch (SignatureException ex) {
+                Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            System.out.println("Signature construite");
+            
+            msg = Message + "#" + new String(signature);
+ 
             msghandshake.setMessage(msg);
             System.out.println("Envoi du message");
             
