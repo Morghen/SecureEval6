@@ -173,7 +173,7 @@ public class ClientThread extends Thread{
                                     int place = v.getNbrBillet() - v.getNbrDispo();
                                     int placeFin = place + nbrBillet;
                                     int prix = nbrBillet * prixVols;
-                                    String str = "billet pris place de "+place+" jusque "+placeFin+" pour un prix de "+prix;
+                                    String str = ""+place+"#"+placeFin+"#"+prix+"#"+idClient+"#"+idVols;
                                     msgToSend = new tickmap(TICKMAPTYPE.OK, str);
                                 }
                             } catch (SQLException ex) {
