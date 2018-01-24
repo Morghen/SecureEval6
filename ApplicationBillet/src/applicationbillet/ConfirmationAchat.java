@@ -142,6 +142,7 @@ public class ConfirmationAchat extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void annulerButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_annulerButtonMouseClicked

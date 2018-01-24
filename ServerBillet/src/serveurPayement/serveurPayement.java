@@ -82,12 +82,14 @@ public class serveurPayement extends Thread{
                             idVols = Integer.parseInt(strTok.nextToken());
                             idClient = Integer.parseInt(strTok.nextToken());
                             tc.write(new tickmap(TICKMAPTYPE.PAYEMENT,""+idVols+"#"+idClient));
+                            tc.read();
                             break;
                         case NOTPAYEMENT:
                             strTok = new StringTokenizer(request.getMessage(),"#");
                             idVols = Integer.parseInt(strTok.nextToken());
                             idClient = Integer.parseInt(strTok.nextToken());
                             tc.write(new tickmap(TICKMAPTYPE.NOTPAYEMENT,""+idVols+"#"+idClient));
+                            tc.read();
                             break;
                     }
                 }

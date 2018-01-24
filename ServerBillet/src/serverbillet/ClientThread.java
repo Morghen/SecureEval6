@@ -67,7 +67,7 @@ public class ClientThread extends Thread{
                     int taille = 0;
                     byte[] tmp = null;
                     tickmap msg = tc.read();
-                    tickmap msgToSend = new tickmap(TICKMAPTYPE.NOK);
+                    tickmap msgToSend = new tickmap(TICKMAPTYPE.NOK, " ");
                     LinkedList<Vols> lv = new LinkedList<>();
                     ResultSet rs=null;
                     StringTokenizer strTok=null;
@@ -203,8 +203,8 @@ public class ClientThread extends Thread{
                             break;
                         case PAYEMENT:
                             strTok = new StringTokenizer(msg.getMessage(),"#");
-                            idVols = Integer.parseInt(strTok.nextToken());
                             idClient = Integer.parseInt(strTok.nextToken());
+                            idVols = Integer.parseInt(strTok.nextToken());
                             try {
                                 uti.update("UPDATE ticket SET payer = \"Y\" WHERE idClient = "+idClient+" AND idVols = "+idVols);
                             } catch (SQLException ex) {
@@ -213,8 +213,8 @@ public class ClientThread extends Thread{
                             break;
                         case NOTPAYEMENT:
                             strTok = new StringTokenizer(msg.getMessage(),"#");
-                            idVols = Integer.parseInt(strTok.nextToken());
                             idClient = Integer.parseInt(strTok.nextToken());
+                            idVols = Integer.parseInt(strTok.nextToken());
                             int nbrBillet1 = 0;
                             try {
                                 rs = uti.query("SELECT count(*) FROM ticket WHERE idClient = "+idClient+" AND idVols = "+idVols+" AND payer like 'N'");

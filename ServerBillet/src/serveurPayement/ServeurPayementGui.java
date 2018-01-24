@@ -86,6 +86,7 @@ public class ServeurPayementGui extends javax.swing.JFrame implements Tracable{
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void demarerButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_demarerButtonMouseClicked
