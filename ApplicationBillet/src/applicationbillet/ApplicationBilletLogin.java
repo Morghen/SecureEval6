@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import libs.TickmapClient;
+import static libs.libSecure.KeystoreAccess;
 import protocole.TICKMAPTYPE;
 import protocole.tickmap;
 
@@ -159,6 +160,10 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         if(response.getType() == TICKMAPTYPE.OK){
             connected = true;
             System.out.println("Connecter OK");
+            System.out.println("Debut handshake");
+            tickmap msghandshake = new tickmap(TICKMAPTYPE.HANDSHAKE);
+            KeystoreAccess();
+            
         }else{
             connected = false;
             System.out.println("Connecter FAILED");
