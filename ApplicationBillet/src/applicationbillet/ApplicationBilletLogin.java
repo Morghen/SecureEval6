@@ -32,6 +32,7 @@ import static libs.libSecure.KeystoreAccess;
 import org.bouncycastle.util.encoders.Base64;
 import protocole.TICKMAPTYPE;
 import protocole.tickmap;
+import sun.misc.BASE64Encoder;
 
 /**
  *
@@ -215,12 +216,13 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             }
             System.out.println("Creation message");
             
+            BASE64Encoder encoder = new BASE64Encoder();
             byte[] bytesMsg = keySecret.getEncoded();
-            System.out.println("cle secrete = " + keySecret.toString());
-            System.out.println("cle secrete = " + new String(bytesMsg));
+            String cleSecStr = encoder.encode(bytesMsg);
+            System.out.println("cle secrete = " + cleSecStr);
             try {
                 byte[] msgCrypt = chiffrement.doFinal(bytesMsg);
-                msg = new String(msgCrypt);
+                msg = encoder.encode(msgCrypt);
             } catch (IllegalBlockSizeException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             } catch (BadPaddingException ex) {

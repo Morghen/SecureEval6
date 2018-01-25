@@ -39,6 +39,7 @@ import libs.Tracable;
 import org.bouncycastle.util.encoders.Base64;
 import protocole.TICKMAPTYPE;
 import protocole.tickmap;
+import sun.misc.BASE64Decoder;
 
 /**
  *
@@ -172,7 +173,13 @@ public class ClientThread extends Thread{
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             pere.Trace("Msg cle = "+msg.getMessage());
-                            byte[] msgCrypt = msg.getMessage().getBytes();
+                            BASE64Decoder decoder = new BASE64Decoder();
+                            byte[] msgCrypt = null;
+                            try {
+                                msgCrypt = decoder.decodeBuffer(msg.getMessage());
+                            } catch (IOException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                             byte[] msgDecrypt = null;
                             try {
                                 msgDecrypt = decryptage.doFinal(msgCrypt);
