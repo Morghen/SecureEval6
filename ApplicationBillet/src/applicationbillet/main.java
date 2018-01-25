@@ -48,6 +48,7 @@ public class main {
         }
         applog.setVisible(false);
         appgui = new ApplicationBilletGUI(tc);
+        appgui.secretForCrypt = applog.keySecret;
         appgui.setVisible(true);
     }
     

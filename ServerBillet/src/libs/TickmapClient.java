@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
 import protocole.tickmap;
 
 /**
@@ -53,6 +55,34 @@ public class TickmapClient {
             byte[] bytes = new byte[taille];
             in.read(bytes);
             ret = new tickmap(new String(bytes));
+        } catch (Exception ex) {
+            Logger.getLogger(TickmapClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ret;
+    }
+    
+    public void write(tickmap t, SecretKey sk){
+        try {
+            out.writeInt(t.getLength());
+            Cipher cip = Cipher.getInstance("DES");
+            cip.init(Cipher.ENCRYPT_MODE, sk);
+            byte[] msgEncrypt = cip.doFinal(t.getBytes());
+            out.write(msgEncrypt);
+        } catch (Exception ex) {
+            Logger.getLogger(TickmapClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public tickmap read(SecretKey sk) {
+        tickmap ret = null;
+        try {
+            int taille = in.readInt();
+            byte[] bytes = new byte[taille];
+            in.read(bytes);
+            Cipher cip = Cipher.getInstance("DES");
+            cip.init(Cipher.DECRYPT_MODE, sk);
+            byte[] msgEncrypt = cip.doFinal(bytes);
+            ret = new tickmap(new String(msgEncrypt));
         } catch (Exception ex) {
             Logger.getLogger(TickmapClient.class.getName()).log(Level.SEVERE, null, ex);
         }

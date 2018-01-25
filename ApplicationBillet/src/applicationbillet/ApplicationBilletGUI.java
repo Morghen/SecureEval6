@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.SecretKey;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import libs.TickmapClient;
@@ -27,7 +28,7 @@ import protocole.tickmap;
 public class ApplicationBilletGUI extends javax.swing.JFrame {
 
     public TickmapClient tc = null;
-    
+    public SecretKey secretForCrypt = null;
     public List<Vols> lv = null;
     
     /**

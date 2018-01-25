@@ -85,6 +85,7 @@ public class ClientThread extends Thread{
                 //on a un client donc on peut excecuter ici les fcts
                 pere.Trace("ThCli: on a un nouveau client");
                 boolean connect = true;
+                boolean crypt = false;
                 int idClient = 0;
                 int idVols = 0;
                 int nbrBillet=0;
@@ -96,6 +97,7 @@ public class ClientThread extends Thread{
                     LinkedList<Vols> lv = new LinkedList<>();
                     ResultSet rs=null;
                     StringTokenizer strTok=null;
+                    crypt = false;
                     //traitement du msg
                     //c'est ici qu'on va faire les fonctions du protocol !
                     if(idClient != 0)
@@ -218,7 +220,7 @@ public class ClientThread extends Thread{
                             }
                             String msgList = new String(Base64.encode(baos.toByteArray()));
                             msgToSend = new tickmap(TICKMAPTYPE.GETLISTVOL, msgList);
-                            
+                            crypt = true;
                             break;
                         case ACHAT:
                             try {
@@ -243,6 +245,7 @@ public class ClientThread extends Thread{
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                                 msgToSend.setMessage(ex.getMessage());
                             }
+                            crypt=true;
                             break;
                         case CONFIRMATION:
                             try {
@@ -263,6 +266,7 @@ public class ClientThread extends Thread{
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                                 msgToSend.setMessage(ex.getMessage());
                             }
+                            crypt=true;
                             break;
                         case PAYEMENT:
                             strTok = new StringTokenizer(msg.getMessage(),"#");
@@ -273,6 +277,7 @@ public class ClientThread extends Thread{
                             } catch (SQLException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             }
+                            crypt=true;
                             break;
                         case NOTPAYEMENT:
                             strTok = new StringTokenizer(msg.getMessage(),"#");
@@ -288,16 +293,21 @@ public class ClientThread extends Thread{
                             } catch (SQLException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             }
+                            crypt =true;
                             break;
                         case NOTCONFIRM:
                             idVols=0;
                             nbrBillet=0;
+                            crypt =true;
                             break;
                         default:
                             
                     }
                     pere.Trace("ThCli envois : "+msgToSend.toString());
-                    tc.write(msgToSend);
+                    if(crypt == true)
+                        tc.write(msgToSend, cleSecrete);
+                    else
+                        tc.write(msgToSend);
                 }
                 pere.Trace("ThCli: fin client");
             }

@@ -42,7 +42,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
     
     private PublicKey keyServ = null;
     private PrivateKey keyCli = null;
-    private SecretKey keySecret = null;
+    public SecretKey keySecret = null;
     private Cipher chiffrement = null;
     
     private KeyStore ks = null;
