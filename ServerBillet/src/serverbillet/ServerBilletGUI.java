@@ -113,7 +113,7 @@ public class ServerBilletGUI extends javax.swing.JFrame implements Tracable{
     
     public void Trace(String txt) {
         Date now = new Date();
-        System.out.println(now.toString()+" : "+txt);
+        System.out.println(now+" : "+txt);
         TraceTextArea.append(now + " "+txt+"\n");
     }
     /**
