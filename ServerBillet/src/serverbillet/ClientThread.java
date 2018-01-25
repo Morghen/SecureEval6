@@ -188,7 +188,7 @@ public class ClientThread extends Thread{
                             } catch (BadPaddingException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             }                          
-                            cleSecrete = new SecretKeySpec(msgDecrypt,0,msgDecrypt.length,"DES");
+                            cleSecrete = new SecretKeySpec(msgDecrypt,0,msgDecrypt.length,"AES");
                             
                             msgToSend = new tickmap(TICKMAPTYPE.OK,"Handshake OK");
                             break;
