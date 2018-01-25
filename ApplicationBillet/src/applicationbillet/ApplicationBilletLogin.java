@@ -184,8 +184,8 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             // Chargement du keystore
             ks = KeystoreAccess();
             try {
-                KeyGenerator keyGen = KeyGenerator.getInstance("DES");
-                keyGen.init(new SecureRandom());
+                KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+                keyGen.init(128);
                 keySecret = keyGen.generateKey();
             } catch (NoSuchAlgorithmException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
