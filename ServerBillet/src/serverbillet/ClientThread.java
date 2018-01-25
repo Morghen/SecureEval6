@@ -179,10 +179,9 @@ public class ClientThread extends Thread{
                             }
                             pere.Trace("Msg cle = "+msg.getMessage());
                             
-                            byte[] msgCrypt = msg.getMessage().getBytes();
                             byte[] msgDecrypt = null;
                             try {
-                                msgDecrypt = decryptage.doFinal(msgCrypt);
+                                msgDecrypt = decryptage.doFinal(msg.getMessage().getBytes());
                             } catch (IllegalBlockSizeException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (BadPaddingException ex) {

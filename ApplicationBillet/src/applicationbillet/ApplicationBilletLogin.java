@@ -219,7 +219,6 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             }
             System.out.println("Creation message");
             
-            
             System.out.println("cle secrete = " + new String(keySecret.getEncoded()));
             byte[] msgCrypt=null;
             try {
