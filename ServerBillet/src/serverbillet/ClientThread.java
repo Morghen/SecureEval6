@@ -18,8 +18,10 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -39,6 +41,7 @@ import libs.BDUtilities;
 import libs.TickmapClient;
 import libs.TickmapList;
 import libs.Tracable;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
 import protocole.TICKMAPTYPE;
 import protocole.tickmap;
@@ -63,6 +66,7 @@ public class ClientThread extends Thread{
         pere = t;
         try {
             uti = new BDUtilities("localhost", 5500);
+            
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -158,11 +162,11 @@ public class ClientThread extends Thread{
                             PrivateKey myKey = null;
                             PublicKey clePub = null;
                             Cipher decryptage = null;
-                            try {
+                            /*try {
                                 myKey = (PrivateKey)ks.getKey("cleserv","ggbrogg".toCharArray());
                                 X509Certificate cer = (X509Certificate)ks.getCertificate("cleserv");
                                 clePub = cer.getPublicKey();
-                                decryptage = Cipher.getInstance("RSA/ECB/NoPadding");
+                                decryptage = Cipher.getInstance("RSA/ECB/PKCS1Padding", "BC");
                                 decryptage.init(Cipher.DECRYPT_MODE, myKey);
                                 pere.Trace("cle publique1 = "+clePub.toString());
                                 pere.Trace("cle publique2 = "+new String(clePub.getEncoded()));
@@ -176,21 +180,24 @@ public class ClientThread extends Thread{
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (UnrecoverableKeyException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+                            } catch (NoSuchProviderException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }*/
                             pere.Trace("Msg cle = "+msg.getMessage());
                             
                             
                             
                             byte[] msgDecrypt = null;
-                            try {
+                            /*try {
                                 msgDecrypt = decryptage.doFinal(msg.getMessage().getBytes());
                             } catch (IllegalBlockSizeException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (BadPaddingException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+                            }*/
+                            msgDecrypt = msg.getMessage().getBytes();
                             pere.Trace("Cle -- "+new String(msgDecrypt));
-                            cleSecrete = new SecretKeySpec(msgDecrypt,"DES");
+                            cleSecrete = new SecretKeySpec(msgDecrypt,0,msgDecrypt.length,"DES");
                             pere.Trace("Cle secrete = "+cleSecrete.toString());
                             pere.Trace("Cle secrete = "+ new String(cleSecrete.getEncoded()));
                             msgToSend = new tickmap(TICKMAPTYPE.OK,"Handshake OK");

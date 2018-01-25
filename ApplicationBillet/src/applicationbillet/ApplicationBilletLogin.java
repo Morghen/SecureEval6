@@ -13,9 +13,11 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
@@ -29,6 +31,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import libs.TickmapClient;
 import static libs.libSecure.KeystoreAccess;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
 import protocole.TICKMAPTYPE;
 import protocole.tickmap;
@@ -61,6 +64,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         tc = ptc;
+        //Security.addProvider(new BouncyCastleProvider());
     }
 
     /**
@@ -187,13 +191,13 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             ks = KeystoreAccess();
             try {
                 KeyGenerator keyGen = KeyGenerator.getInstance("DES");
-                
-                keyGen.init(new SecureRandom());
+                System.out.println("Connecter OK" + keyGen.getProvider().getName());
+                keyGen.init(new SecureRandom("hello".getBytes()));
                 keySecret = keyGen.generateKey();
             } catch (NoSuchAlgorithmException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
-            try {
+            /*try {
                 keyCli = (PrivateKey)ks.getKey("cleclient","ggbrogg".toCharArray());
                 System.out.println("Cle privee recuperee");
                 X509Certificate certifServ = (X509Certificate)ks.getCertificate("authserv");
@@ -206,7 +210,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
-                chiffrement = Cipher.getInstance("RSA/ECB/NoPadding");
+                chiffrement = Cipher.getInstance("RSA/ECB/PKCS1Padding");
                 chiffrement.init(Cipher.ENCRYPT_MODE, keyServ);
                 System.out.println("Cle publique1  = "+keyServ.toString());
                 System.out.println("Cle publique2  = "+ new String(keyServ.getEncoded()));
@@ -216,24 +220,26 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InvalidKeyException ex) {        
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }*/
             System.out.println("Creation message");
             
             System.out.println("cle secrete = " + new String(keySecret.getEncoded()));
             byte[] msgCrypt=null;
-            try {
+            /*try {
                 //msgCrypt = chiffrement.doFinal(keySecret.getEncoded());
-                msgCrypt = chiffrement.doFinal("je test un cryptage !!".getBytes());
+                //msgCrypt = chiffrement.doFinal("je test un cryptage !!".getBytes());
+               
             } catch (IllegalBlockSizeException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             } catch (BadPaddingException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            }*/
+            msgCrypt = keySecret.getEncoded();
 
             msghandshake.setMessage(new String(msgCrypt));
             System.out.println("Envoi du message = " + msghandshake.toString());
-            System.out.println("Envoi du message = " + msghandshake.toString());
-            System.out.println("Envoi du message = " + msghandshake.toString());
+            System.out.println("Envoi du message = " + new String(msgCrypt));
+            System.out.println("Envoi du message = " + keySecret.toString());
             System.out.println("Envoi du message = " + msghandshake.toString().length());
             
             tc.write(msghandshake);

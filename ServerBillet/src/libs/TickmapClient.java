@@ -65,7 +65,7 @@ public class TickmapClient {
     public void write(tickmap t, SecretKey sk){
         try {
             out.writeInt(t.getLength());
-            Cipher cip = Cipher.getInstance("DES");
+            Cipher cip = Cipher.getInstance("DES/ECB/PKCS5Padding");
             cip.init(Cipher.ENCRYPT_MODE, sk);
             byte[] msgEncrypt = cip.doFinal(t.getBytes());
             out.write(msgEncrypt);
@@ -80,7 +80,7 @@ public class TickmapClient {
             int taille = in.readInt();
             byte[] bytes = new byte[taille];
             in.read(bytes);
-            Cipher cip = Cipher.getInstance("DES");
+            Cipher cip = Cipher.getInstance("DES/ECB/PKCS5Padding");
             cip.init(Cipher.DECRYPT_MODE, sk);
             byte[] msgEncrypt = cip.doFinal(bytes);
             ret = new tickmap(new String(msgEncrypt));

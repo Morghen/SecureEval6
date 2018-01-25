@@ -7,9 +7,11 @@
 package serverbillet;
 
 import java.io.PrintStream;
+import java.security.Security;
 import java.util.Date;
 import libs.Tracable;
 import libs.redirectMsg;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  *
@@ -27,6 +29,7 @@ public class ServerBilletGUI extends javax.swing.JFrame implements Tracable{
         //System.setOut(PStream);
         //System.setErr(PStream);
         setLocationRelativeTo(null);
+        //Security.addProvider(new BouncyCastleProvider());
     }
 
     /** This method is called from within the constructor to
