@@ -191,7 +191,8 @@ public class ClientThread extends Thread{
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             }                          
                             cleSecrete = new SecretKeySpec(msgDecrypt,0,msgDecrypt.length,"DES");
-                            
+                            pere.Trace("Cle secrete = "+cleSecrete.toString());
+                            pere.Trace("Cle secrete = "+cleSecrete.getEncoded());
                             msgToSend = new tickmap(TICKMAPTYPE.OK,"Handshake OK");
                             break;
                                      

@@ -185,7 +185,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             ks = KeystoreAccess();
             try {
                 KeyGenerator keyGen = KeyGenerator.getInstance("DES");
-                keyGen.init(new SecureRandom());
+                keyGen.init(56);
                 keySecret = keyGen.generateKey();
             } catch (NoSuchAlgorithmException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -215,7 +215,8 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             System.out.println("Creation message");
             
             byte[] bytesMsg = keySecret.getEncoded();
-            System.out.println("msg = " + new String(bytesMsg));
+            System.out.println("cle secrete = " + keySecret.toString());
+            System.out.println("cle secrete = " + new String(bytesMsg));
             try {
                 byte[] msgCrypt = chiffrement.doFinal(bytesMsg);
                 msg = new String(msgCrypt);
