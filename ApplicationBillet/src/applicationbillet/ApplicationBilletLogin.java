@@ -6,27 +6,18 @@
 package applicationbillet;
 
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.security.InvalidKeyException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
-import java.security.Signature;
-import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
-import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
-import java.util.Base64.Encoder;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,10 +29,8 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import libs.TickmapClient;
 import static libs.libSecure.KeystoreAccess;
-import org.bouncycastle.util.encoders.Base64Encoder;
 import protocole.TICKMAPTYPE;
 import protocole.tickmap;
-import sun.misc.BASE64Encoder;
 
 /**
  *
@@ -195,8 +184,8 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             // Chargement du keystore
             ks = KeystoreAccess();
             try {
-                KeyGenerator keyGen = KeyGenerator.getInstance("DES");
-                keyGen.init(new SecureRandom());
+                KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+                keyGen.init(128);
                 keySecret = keyGen.generateKey();
             } catch (NoSuchAlgorithmException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
