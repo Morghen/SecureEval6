@@ -218,7 +218,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             
             BASE64Encoder encoder = new BASE64Encoder();
             byte[] bytesMsg = keySecret.getEncoded();
-            String cleSecStr = encoder.encode(bytesMsg);
+            String cleSecStr = encoder.encode(bytesMsg); // Represente la chaine du message non chiffre
             System.out.println("cle secrete = " + cleSecStr);
             try {
                 byte[] msgCrypt = chiffrement.doFinal(bytesMsg);
