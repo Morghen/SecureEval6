@@ -187,7 +187,8 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             ks = KeystoreAccess();
             try {
                 KeyGenerator keyGen = KeyGenerator.getInstance("DES");
-                keyGen.init(56);
+                
+                keyGen.init(new SecureRandom());
                 keySecret = keyGen.generateKey();
             } catch (NoSuchAlgorithmException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
@@ -205,8 +206,10 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
-                chiffrement = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+                chiffrement = Cipher.getInstance("RSA/ECB/NoPadding");
                 chiffrement.init(Cipher.ENCRYPT_MODE, keyServ);
+                System.out.println("Cle publique1  = "+keyServ.toString());
+                System.out.println("Cle publique2  = "+ new String(keyServ.getEncoded()));
             } catch (NoSuchAlgorithmException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NoSuchPaddingException ex) {
@@ -216,21 +219,23 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             }
             System.out.println("Creation message");
             
-            BASE64Encoder encoder = new BASE64Encoder();
-            byte[] bytesMsg = keySecret.getEncoded();
-            String cleSecStr = encoder.encode(bytesMsg);
-            System.out.println("cle secrete = " + cleSecStr);
+            
+            System.out.println("cle secrete = " + new String(keySecret.getEncoded()));
+            byte[] msgCrypt=null;
             try {
-                byte[] msgCrypt = chiffrement.doFinal(bytesMsg);
-                msg = encoder.encode(msgCrypt);
+                //msgCrypt = chiffrement.doFinal(keySecret.getEncoded());
+                msgCrypt = chiffrement.doFinal("je test un cryptage !!".getBytes());
             } catch (IllegalBlockSizeException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             } catch (BadPaddingException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            msghandshake.setMessage(msg);
+            msghandshake.setMessage(new String(msgCrypt));
             System.out.println("Envoi du message = " + msghandshake.toString());
+            System.out.println("Envoi du message = " + msghandshake.toString());
+            System.out.println("Envoi du message = " + msghandshake.toString());
+            System.out.println("Envoi du message = " + msghandshake.toString().length());
             
             tc.write(msghandshake);
             

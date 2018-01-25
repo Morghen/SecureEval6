@@ -12,14 +12,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
+import java.security.Certificate;
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -96,6 +99,7 @@ public class ClientThread extends Thread{
                         pere.Trace("ThCli recv "+idClient+" - "+msg.toString());
                     else
                         pere.Trace("ThCli recv - "+msg.toString());
+                    pere.Trace("Lenght = "+msg.toString().length());
                     switch(msg.getType()){
                         case CONNECT:
                             strTok = new StringTokenizer(msg.getMessage(), "#");
@@ -152,11 +156,16 @@ public class ClientThread extends Thread{
                         case HANDSHAKE:
                             ks = KeystoreAccess();
                             PrivateKey myKey = null;
+                            PublicKey clePub = null;
                             Cipher decryptage = null;
                             try {
                                 myKey = (PrivateKey)ks.getKey("cleserv","ggbrogg".toCharArray());
-                                decryptage = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+                                X509Certificate cer = (X509Certificate)ks.getCertificate("cleserv");
+                                clePub = cer.getPublicKey();
+                                decryptage = Cipher.getInstance("RSA/ECB/NoPadding");
                                 decryptage.init(Cipher.DECRYPT_MODE, myKey);
+                                pere.Trace("cle publique1 = "+clePub.toString());
+                                pere.Trace("cle publique2 = "+new String(clePub.getEncoded()));
                             } catch (NoSuchAlgorithmException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (NoSuchPaddingException ex) {
@@ -169,7 +178,7 @@ public class ClientThread extends Thread{
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             pere.Trace("Msg cle = "+msg.getMessage());
-                            BASE64Decoder decoder = new BASE64Decoder();
+                            
                             byte[] msgCrypt = msg.getMessage().getBytes();
                             byte[] msgDecrypt = null;
                             try {
@@ -179,13 +188,8 @@ public class ClientThread extends Thread{
                             } catch (BadPaddingException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            byte[] msgDecryptFinal = null;
-                            try {
-                                msgDecryptFinal = decoder.decodeBuffer(msg.getMessage());
-                            } catch (IOException ex) {
-                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                            cleSecrete = new SecretKeySpec(msgDecryptFinal,0,msgDecryptFinal.length,"DES");
+                            pere.Trace("Cle -- "+new String(msgDecrypt));
+                            cleSecrete = new SecretKeySpec(msgDecrypt,"DES");
                             pere.Trace("Cle secrete = "+cleSecrete.toString());
                             pere.Trace("Cle secrete = "+ new String(cleSecrete.getEncoded()));
                             msgToSend = new tickmap(TICKMAPTYPE.OK,"Handshake OK");
