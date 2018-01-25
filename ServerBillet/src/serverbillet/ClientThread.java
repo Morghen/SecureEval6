@@ -9,25 +9,17 @@ import Data.Vols;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.security.InvalidKeyException;
-import java.security.KeyFactory;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Signature;
-import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -47,7 +39,6 @@ import libs.Tracable;
 import org.bouncycastle.util.encoders.Base64;
 import protocole.TICKMAPTYPE;
 import protocole.tickmap;
-import sun.misc.BASE64Decoder;
 
 /**
  *
@@ -189,10 +180,10 @@ public class ClientThread extends Thread{
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (BadPaddingException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
-                            }                          
+                            }
                             cleSecrete = new SecretKeySpec(msgDecrypt,0,msgDecrypt.length,"DES");
                             pere.Trace("Cle secrete = "+cleSecrete.toString());
-                            pere.Trace("Cle secrete = "+cleSecrete.getEncoded());
+                            pere.Trace("Cle secrete = "+ new String(cleSecrete.getEncoded()));
                             msgToSend = new tickmap(TICKMAPTYPE.OK,"Handshake OK");
                             break;
                                      

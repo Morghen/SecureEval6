@@ -29,6 +29,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import libs.TickmapClient;
 import static libs.libSecure.KeystoreAccess;
+import org.bouncycastle.util.encoders.Base64;
 import protocole.TICKMAPTYPE;
 import protocole.tickmap;
 
