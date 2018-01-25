@@ -174,12 +174,7 @@ public class ClientThread extends Thread{
                             }
                             pere.Trace("Msg cle = "+msg.getMessage());
                             BASE64Decoder decoder = new BASE64Decoder();
-                            byte[] msgCrypt = null;
-                            try {
-                                msgCrypt = decoder.decodeBuffer(msg.getMessage());
-                            } catch (IOException ex) {
-                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+                            byte[] msgCrypt = msg.getMessage().getBytes();
                             byte[] msgDecrypt = null;
                             try {
                                 msgDecrypt = decryptage.doFinal(msgCrypt);
@@ -188,7 +183,13 @@ public class ClientThread extends Thread{
                             } catch (BadPaddingException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            cleSecrete = new SecretKeySpec(msgDecrypt,0,msgDecrypt.length,"DES");
+                            byte[] msgDecryptFinal = null;
+                            try {
+                                msgDecryptFinal = decoder.decodeBuffer(msg.getMessage());
+                            } catch (IOException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            cleSecrete = new SecretKeySpec(msgDecryptFinal,0,msgDecryptFinal.length,"DES");
                             pere.Trace("Cle secrete = "+cleSecrete.toString());
                             pere.Trace("Cle secrete = "+ new String(cleSecrete.getEncoded()));
                             msgToSend = new tickmap(TICKMAPTYPE.OK,"Handshake OK");
