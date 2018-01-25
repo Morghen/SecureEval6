@@ -155,21 +155,17 @@ public class ClientThread extends Thread{
                             Cipher decryptage = null;
                             try {
                                 myKey = (PrivateKey)ks.getKey("cleserv","ggbrogg".toCharArray());
-                            } catch (KeyStoreException ex) {
-                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (NoSuchAlgorithmException ex) {
-                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (UnrecoverableKeyException ex) {
-                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                            try {
-                                decryptage = Cipher.getInstance("RSA/ECB/NoPadding");
+                                decryptage = Cipher.getInstance("RSA/ECB/PKCS1Padding");
                                 decryptage.init(Cipher.DECRYPT_MODE, myKey);
                             } catch (NoSuchAlgorithmException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (NoSuchPaddingException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (InvalidKeyException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (KeyStoreException ex) {
+                                Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (UnrecoverableKeyException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             pere.Trace("Msg cle = "+msg.getMessage());
