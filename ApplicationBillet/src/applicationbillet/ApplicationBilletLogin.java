@@ -203,7 +203,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
-                chiffrement = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+                chiffrement = Cipher.getInstance("RSA/ECB/NoPadding");
                 chiffrement.init(Cipher.ENCRYPT_MODE, keyServ);
             } catch (NoSuchAlgorithmException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);

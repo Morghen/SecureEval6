@@ -169,7 +169,7 @@ public class ClientThread extends Thread{
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             try {
-                                decryptage = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+                                decryptage = Cipher.getInstance("RSA/ECB/NoPadding");
                                 decryptage.init(Cipher.DECRYPT_MODE, myKey);
                             } catch (NoSuchAlgorithmException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
