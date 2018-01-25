@@ -24,6 +24,7 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
 import java.util.Base64.Encoder;
 import java.util.Date;
 import java.util.logging.Level;
@@ -200,9 +201,9 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
-                keyCli = (PrivateKey)ks.getKey("client","ggbrogg".toCharArray());
+                keyCli = (PrivateKey)ks.getKey("cleclient","ggbrogg".toCharArray());
                 System.out.println("Cle privee recuperee");
-                Certificate certifServ = ks.getCertificate("server");
+                X509Certificate certifServ = (X509Certificate)ks.getCertificate("authserv");
                 keyServ = certifServ.getPublicKey();
             } catch (KeyStoreException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);

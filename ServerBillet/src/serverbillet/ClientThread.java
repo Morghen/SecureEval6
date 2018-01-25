@@ -61,6 +61,7 @@ public class ClientThread extends Thread{
     private Tracable pere = null;
     private BDUtilities uti=null;
     private KeyStore ks = null;
+    private SecretKey cleSecrete = null;
 
     public ClientThread(TickmapList ptc, Tracable t) {
         tl = ptc;
@@ -159,7 +160,7 @@ public class ClientThread extends Thread{
                             PrivateKey myKey = null;
                             Cipher decryptage = null;
                             try {
-                                myKey = (PrivateKey)ks.getKey("server","ggbrogg".toCharArray());
+                                myKey = (PrivateKey)ks.getKey("cleserv","ggbrogg".toCharArray());
                             } catch (KeyStoreException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             } catch (NoSuchAlgorithmException ex) {
@@ -187,7 +188,8 @@ public class ClientThread extends Thread{
                             } catch (BadPaddingException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             }                          
-                            SecretKey cleSecrete = new SecretKeySpec(msgDecrypt,0,msgDecrypt.length,"DES");
+                            cleSecrete = new SecretKeySpec(msgDecrypt,0,msgDecrypt.length,"DES");
+                            break;
                                      
                         case GETLISTVOL:
                             lv = new LinkedList<>();
@@ -315,7 +317,7 @@ public class ClientThread extends Thread{
         char[] keyStorePassword = "test1234".toCharArray();
         try
         {
-            InputStream ksis = new FileInputStream("..\\keystore.jks");
+            InputStream ksis = new FileInputStream("keystore_serv.jks");
             ks.load(ksis, keyStorePassword);
         }
         catch(IOException ex)
