@@ -17,6 +17,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -212,7 +213,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
-                chiffrement = Cipher.getInstance("DES/ECB/PKCS5Padding");
+                chiffrement = Cipher.getInstance("RSA/ECB/PKCS1Padding");
                 chiffrement.init(Cipher.ENCRYPT_MODE, keyServ);
             } catch (NoSuchAlgorithmException ex) {
                 Logger.getLogger(ApplicationBilletLogin.class.getName()).log(Level.SEVERE, null, ex);
