@@ -179,6 +179,8 @@ public class ClientThread extends Thread{
                             }
                             pere.Trace("Msg cle = "+msg.getMessage());
                             
+                            
+                            
                             byte[] msgDecrypt = null;
                             try {
                                 msgDecrypt = decryptage.doFinal(msg.getMessage().getBytes());
