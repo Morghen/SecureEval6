@@ -40,13 +40,11 @@ public class testMain {
                     System.out.println((i+1) + ".[trustedCertificateEntry] " + aliases[i].toString());
                 X509Certificate certif = (X509Certificate)ks.getCertificate(aliasCourant);
                 System.out.println("Type de certificat : " + certif.getType());
-                System.out.println("Nom du propriétaire du certificat : " +
-                certif.getSubjectDN().getName());
+                System.out.println("Nom du propriétaire du certificat : " +certif.getSubjectDN().getName());
                 System.out.println("Recuperation de la cle publique");
                 PublicKey cléPublique = certif.getPublicKey();
                 System.out.println("*** Cle publique recuperee = "+cléPublique.toString());
-                System.out.println("Dates limites de validité : [" + certif.getNotBefore() + " - " +
-                certif.getNotAfter() + "]");
+                System.out.println("Dates limites de validité : [" + certif.getNotBefore() + " - " + certif.getNotAfter() + "]");
             }
         }
         catch (Exception e)
