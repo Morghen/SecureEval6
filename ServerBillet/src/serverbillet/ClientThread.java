@@ -319,7 +319,7 @@ public class ClientThread extends Thread{
         char[] keyStorePassword = "test1234".toCharArray();
         try
         {
-            InputStream ksis = new FileInputStream("keystore_serv.jks");
+            InputStream ksis = new FileInputStream("..\\keystore_serv.jks");
             ks.load(ksis, keyStorePassword);
         }
         catch(IOException ex)
