@@ -128,8 +128,10 @@ public class AchatBillet extends javax.swing.JDialog {
     private void achatButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_achatButtonMouseClicked
         // TODO add your handling code here:
         if((int)nbrSpinner.getValue() > 0){
-            tc.write(new tickmap(TICKMAPTYPE.ACHAT, ""+v.getIdVols()+"#"+(int)nbrSpinner.getValue()), tc.secretKeyForCrypt);
-            tickmap response = tc.read(tc.secretKeyForCrypt);
+            //tc.write(new tickmap(TICKMAPTYPE.ACHAT, ""+v.getIdVols()+"#"+(int)nbrSpinner.getValue()), tc.secretKeyForCrypt);
+            tc.write(new tickmap(TICKMAPTYPE.ACHAT, ""+v.getIdVols()+"#"+(int)nbrSpinner.getValue()));
+            //tickmap response = tc.read(tc.secretKeyForCrypt);
+            tickmap response = tc.read();
             if(response.getType() == TICKMAPTYPE.NOK){
                 JOptionPane.showMessageDialog(this,"ERREUR D'ACHAT", "title", JOptionPane.INFORMATION_MESSAGE);
             }else{

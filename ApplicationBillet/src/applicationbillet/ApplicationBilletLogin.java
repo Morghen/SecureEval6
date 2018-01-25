@@ -242,9 +242,9 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             System.out.println("Envoi du message = " + keySecret.toString());
             System.out.println("Envoi du message = " + msghandshake.toString().length());
             
-            tc.write(msghandshake);
+            //tc.write(msghandshake);
             
-            response = tc.read();
+            //response = tc.read();
             connected = true;
         }
         else{

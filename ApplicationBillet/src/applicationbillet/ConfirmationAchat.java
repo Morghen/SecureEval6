@@ -147,8 +147,10 @@ public class ConfirmationAchat extends javax.swing.JDialog {
 
     private void annulerButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_annulerButtonMouseClicked
         // TODO add your handling code here:
-       tc.write(new tickmap(TICKMAPTYPE.NOTCONFIRM,"NOK"), tc.secretKeyForCrypt);
-       tc.read(tc.secretKeyForCrypt);
+       //tc.write(new tickmap(TICKMAPTYPE.NOTCONFIRM,"NOK"), tc.secretKeyForCrypt);
+       //tc.read(tc.secretKeyForCrypt);
+       tc.write(new tickmap(TICKMAPTYPE.NOTCONFIRM,"NOK"));
+       tc.read();
        try {
             PaypClient pc = new PaypClient(new Socket("127.0.0.1",9026));
             pc.write(new payp(PAYPTYPE.NOTPAYEMENT, ""+idClient+"#"+idVols));
@@ -160,8 +162,10 @@ public class ConfirmationAchat extends javax.swing.JDialog {
 
     private void confirmButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_confirmButtonMouseClicked
         // TODO add your handling code here:
-        tc.write(new tickmap(TICKMAPTYPE.CONFIRMATION,"OK"), tc.secretKeyForCrypt);
-        tc.read(tc.secretKeyForCrypt);
+        //tc.write(new tickmap(TICKMAPTYPE.CONFIRMATION,"OK"), tc.secretKeyForCrypt);
+        //tc.read(tc.secretKeyForCrypt);
+        tc.write(new tickmap(TICKMAPTYPE.CONFIRMATION,"OK"));
+        tc.read();
         try {
             PaypClient pc = new PaypClient(new Socket("127.0.0.1",9026));
             //envoyer n°carte credit crypter

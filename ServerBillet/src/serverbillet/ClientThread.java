@@ -228,7 +228,7 @@ public class ClientThread extends Thread{
                             }
                             String msgList = new String(Base64.encode(baos.toByteArray()));
                             msgToSend = new tickmap(TICKMAPTYPE.GETLISTVOL, msgList);
-                            crypt = true;
+                            //crypt = true;
                             break;
                         case ACHAT:
                             try {
@@ -253,7 +253,7 @@ public class ClientThread extends Thread{
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                                 msgToSend.setMessage(ex.getMessage());
                             }
-                            crypt=true;
+                            //crypt=true;
                             break;
                         case CONFIRMATION:
                             try {
@@ -274,7 +274,7 @@ public class ClientThread extends Thread{
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                                 msgToSend.setMessage(ex.getMessage());
                             }
-                            crypt=true;
+                            //crypt=true;
                             break;
                         case PAYEMENT:
                             strTok = new StringTokenizer(msg.getMessage(),"#");
@@ -301,12 +301,12 @@ public class ClientThread extends Thread{
                             } catch (SQLException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            crypt =true;
+                            //crypt =true;
                             break;
                         case NOTCONFIRM:
                             idVols=0;
                             nbrBillet=0;
-                            crypt =true;
+                            //crypt =true;
                             break;
                         default:
                             
