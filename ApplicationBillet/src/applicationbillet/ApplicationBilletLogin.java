@@ -188,7 +188,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
         tickmap response = tc.read();
         
         if(response.getType() == TICKMAPTYPE.OK){
-            connected = true;
+            
             System.out.println("Connecter OK");
             System.out.println("Debut handshake");
             tickmap msghandshake = new tickmap(TICKMAPTYPE.HANDSHAKE);
@@ -226,6 +226,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             System.out.println("Creation message");
             
             byte[] bytesMsg = keySecret.getEncoded();
+            System.out.println("Envoi du message" + new String(bytesMsg));
             try {
                 byte[] msgCrypt = chiffrement.doFinal(bytesMsg);
                 msg = new String(msgCrypt);
@@ -236,24 +237,12 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             }
 
             msghandshake.setMessage(msg);
-            System.out.println("Envoi du message");
+            System.out.println("Envoi du message" + msghandshake.toString());
             
             tc.write(msghandshake);
             
             response = tc.read();
-            
-            if(response.getType() == TICKMAPTYPE.OK)
-            {
-                this.setVisible(false);
-                ApplicationBilletGUI mainApp = new ApplicationBilletGUI();
-                mainApp.setVisible(true);
-            }
-            else
-            {
-                System.out.println("Refuse par le serveur");
-                System.exit(-1);
-            }
-                       
+            connected = true;
         }
         else{
             connected = false;
