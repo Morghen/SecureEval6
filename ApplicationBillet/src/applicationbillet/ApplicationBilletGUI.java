@@ -28,7 +28,6 @@ import protocole.tickmap;
 public class ApplicationBilletGUI extends javax.swing.JFrame {
 
     public TickmapClient tc = null;
-    public SecretKey secretForCrypt = null;
     public List<Vols> lv = null;
     
     /**
@@ -45,7 +44,7 @@ public class ApplicationBilletGUI extends javax.swing.JFrame {
     
     public void RefreshList(){
         tc.write(new tickmap(TICKMAPTYPE.GETLISTVOL));
-        tickmap response = tc.read();
+        tickmap response = tc.read(tc.secretKeyForCrypt);
         if(response.getType() == TICKMAPTYPE.GETLISTVOL){
             System.out.println("Response ListVols = "+response.getMessage());
             ByteArrayInputStream bais = new ByteArrayInputStream(Base64.decode(response.getMessage().getBytes()));

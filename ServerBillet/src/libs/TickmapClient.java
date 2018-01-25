@@ -24,6 +24,7 @@ import protocole.tickmap;
 public class TickmapClient {
     
     private Socket clientSoc;
+    public SecretKey secretKeyForCrypt=null;
     public DataInputStream in;
     public DataOutputStream out;
     
