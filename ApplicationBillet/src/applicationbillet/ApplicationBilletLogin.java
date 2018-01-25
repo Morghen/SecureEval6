@@ -215,7 +215,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             System.out.println("Creation message");
             
             byte[] bytesMsg = keySecret.getEncoded();
-            System.out.println("Envoi du message" + new String(bytesMsg));
+            System.out.println("msg = " + new String(bytesMsg));
             try {
                 byte[] msgCrypt = chiffrement.doFinal(bytesMsg);
                 msg = new String(msgCrypt);
