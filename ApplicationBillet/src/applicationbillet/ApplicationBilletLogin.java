@@ -180,7 +180,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             
             System.out.println("Connecter OK");
             System.out.println("Debut handshake");
-            tickmap msghandshake = new tickmap(TICKMAPTYPE.HANDSHAKE);
+            tickmap msghandshake = new tickmap(TICKMAPTYPE.HANDSHAKE, " ");
             // Chargement du keystore
             ks = KeystoreAccess();
             try {
@@ -226,7 +226,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             }
 
             msghandshake.setMessage(msg);
-            System.out.println("Envoi du message" + msghandshake.toString());
+            System.out.println("Envoi du message = " + msghandshake.toString());
             
             tc.write(msghandshake);
             
@@ -237,7 +237,7 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             connected = false;
             System.out.println("Connecter FAILED");
         }
-        System.out.println(response.toString());
+        System.out.println("reponse = " + response.toString());
     }//GEN-LAST:event_OKButtonActionPerformed
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed

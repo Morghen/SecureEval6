@@ -178,7 +178,7 @@ public class ClientThread extends Thread{
                             } catch (InvalidKeyException ex) {
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            
+                            pere.Trace("Msg cle = "+msg.getMessage());
                             byte[] msgCrypt = msg.getMessage().getBytes();
                             byte[] msgDecrypt = null;
                             try {
