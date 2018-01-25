@@ -189,6 +189,8 @@ public class ClientThread extends Thread{
                                 Logger.getLogger(ClientThread.class.getName()).log(Level.SEVERE, null, ex);
                             }                          
                             cleSecrete = new SecretKeySpec(msgDecrypt,0,msgDecrypt.length,"DES");
+                            
+                            msgToSend = new tickmap(TICKMAPTYPE.OK,"Handshake OK");
                             break;
                                      
                         case GETLISTVOL:

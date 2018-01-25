@@ -240,6 +240,18 @@ public class ApplicationBilletLogin extends javax.swing.JFrame {
             tc.write(msghandshake);
             
             response = tc.read();
+            
+            if(response.getType() == TICKMAPTYPE.OK)
+            {
+                this.setVisible(false);
+                ApplicationBilletGUI mainApp = new ApplicationBilletGUI();
+                mainApp.setVisible(true);
+            }
+            else
+            {
+                System.out.println("Refuse par le serveur");
+                System.exit(-1);
+            }
                        
         }
         else{
