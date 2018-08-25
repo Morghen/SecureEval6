@@ -26,3 +26,6 @@ hs_err_pid*
 /ApplicationBillet/build/
 /ApplicationBillet/nbproject/private/
 /ServerBillet/nbproject/private/
+/TestCheckCrypto/nbproject/private/
+/TestCheckCrypto/build/
+/TestCheckCrypto/dist/
