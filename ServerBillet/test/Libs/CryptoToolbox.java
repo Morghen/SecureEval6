@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.util.Arrays;
 
 /**
  *
@@ -33,6 +34,11 @@ public class CryptoToolbox {
         byte[] digest = md.digest();
         
         return digest;
+    }
+    
+    public static boolean CheckHash(byte[] first, byte[] second) {
+        
+        return Arrays.equals(first, second);
     }
     
 }
